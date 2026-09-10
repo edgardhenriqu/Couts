@@ -161,15 +161,15 @@ export const NAV_LINKS = [
   { href: '#treinamentos', label: 'Treinamentos' },
   { href: '#tecnologias', label: 'Tecnologias' },
   { href: '#quem-somos', label: 'Quem somos' },
-  { href: '#contato', label: 'Contato' },
+  { href: '#professores', label: 'Professores' },
 ];
 
 export const SOCIALS = ['WhatsApp', 'Instagram', 'LinkedIn', 'YouTube', 'TikTok'];
 
 export const TRAINING_OPTIONS = [
   'ADAS',
-  'Diagnostico Automotivo',
-  'Testing & Validation',
-  'Rede Can',
+  'Diagnóstico Automotivo',
+  'Eletrônica Automotiva',
+  'Arquitetura Eletrônica',
   'Outro',
 ];

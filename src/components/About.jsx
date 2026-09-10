@@ -16,6 +16,9 @@ export default function About() {
               <p key={text}>{text}</p>
             ))}
           </div>
+          <a className="about-teachers-link" href="#professores">
+            Conheça nossos professores <span aria-hidden="true">→</span>
+          </a>
         </div>
 
         <figure className="framed">

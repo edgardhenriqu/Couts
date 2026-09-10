@@ -26,7 +26,7 @@ src/
   components/
     SiteHeader.jsx  Hero.jsx  Pillars.jsx  MarketSection.jsx  QuoteBand.jsx
     Trainings.jsx   Audiences.jsx  LearnConnectBuild.jsx  WhyUs.jsx
-    About.jsx       Contact.jsx  SiteFooter.jsx
+    About.jsx       Teachers.jsx  Contact.jsx  SiteFooter.jsx
     Eyebrow.jsx     Logo.jsx
   assets/                     imagens e vídeo importados do projeto de design
 ```
@@ -75,6 +75,28 @@ própria arte, o que define como o painel é montado:
 Para trocar um banner, basta substituir o arquivo mantendo a proporção 16:9.
 Se a proporção mudar, ajuste o `aspect-ratio` de `.tech-panel__banner img` e o
 `BANNER_SIZE` em `data.js`.
+
+## Professores
+
+A seção `#professores` fica logo após “Quem somos” na página principal e
+apresenta o perfil de Felipe Coutinho. O menu “Professores” e o link em
+“Quem somos” levam diretamente à seção. O site tem uma única entrada HTML.
+
+- `src/components/Teachers.jsx` e `Teachers.css`: apresentação responsiva,
+  resumo, destaques e cartões de atuação, formação e certificações.
+- `src/felipe.js`: conteúdo do perfil e link para o LinkedIn.
+
+Os dados foram consultados em 10/09/2026 no conteúdo público indexado do
+[perfil de Felipe](https://de.linkedin.com/in/felipe-coutinho-164906133/en).
+As certificações são as declaradas no perfil.
+
+A formação (FGV, Anhembi Morumbi e FATEC Santo André), a experiência
+profissional e a foto (`src/assets/felipe-coutinho.jpg`, 400 × 400) foram
+enviadas pelo usuário. Em “Atuação profissional” entram só as experiências
+mais recentes (Murata, Tesla e ALTEN), para o cartão não crescer além dos
+demais. A
+foto é importada em `src/felipe.js` como `FELIPE.portrait`; sem ela, o
+componente volta a exibir o monograma FC.
 
 ## Props do canvas
 

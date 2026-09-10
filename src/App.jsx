@@ -10,6 +10,7 @@ import WhyUs from './components/WhyUs.jsx';
 import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
 import SiteFooter from './components/SiteFooter.jsx';
+import Teachers from './components/Teachers.jsx';
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <LearnConnectBuild />
         <WhyUs />
         <About />
+        <Teachers />
         <Contact />
       </main>
 
