@@ -128,6 +128,11 @@ export const AUDIENCES = [
     title: 'Empresas e Equipes Técnicas',
     desc: 'Desenvolva competências específicas para os desafios tecnológicos da indústria automotiva.',
   },
+  {
+    n: 'E',
+    title: 'Mecânicos e Técnicos Automotivos',
+    desc: 'Evolua junto com os veículos. Aprofunde seus conhecimentos em eletrônica, diagnóstico, redes, sensores e sistemas cada vez mais presentes na reparação automotiva.',
+  },
 ];
 
 export const LCB = [
@@ -151,17 +156,10 @@ export const REASONS = [
   },
 ];
 
-export const ABOUT_PARAGRAPHS = [
-  'Nossa experiência reúne diferentes perspectivas da cadeia automotiva — desde desenvolvimento e testes de sistemas até tecnologias de sensores, ADAS, infotainment, aquisição de dados e semicondutores.',
-  'Ao longo de nossas carreiras, tivemos a oportunidade de trabalhar próximos a diferentes empresas e projetos da indústria automotiva e de tecnologia.',
-  'Essa experiência é o que trazemos para cada treinamento: conhecimento técnico, visão de engenharia e uma perspectiva real de como a indústria funciona.',
-];
-
 export const NAV_LINKS = [
   { href: '#treinamentos', label: 'Treinamentos' },
-  { href: '#tecnologias', label: 'Tecnologias' },
-  { href: '#quem-somos', label: 'Quem somos' },
-  { href: '#professores', label: 'Professores' },
+  { href: '#por-que-aprender-conosco', label: 'Tecnologias' },
+  { href: '#professores', label: 'Instrutores' },
 ];
 
 export const SOCIALS = ['WhatsApp', 'Instagram', 'LinkedIn', 'YouTube', 'TikTok'];

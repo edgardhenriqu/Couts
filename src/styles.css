@@ -384,10 +384,20 @@ a:hover { color: var(--accent-soft); }
   max-width: 15ch;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(38px, 5.4vw, 86px);
+  font-size: clamp(38px, 5.4vw, 76px);
   line-height: .96;
   letter-spacing: -.02em;
   text-wrap: balance;
+}
+
+.hero__tagline {
+  margin: 18px 0 0;
+  max-width: 40ch;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(16px, 1.4vw, 20px);
+  letter-spacing: -.01em;
+  color: var(--accent, #fff);
 }
 
 .hero__lede {
@@ -578,22 +588,35 @@ a:hover { color: var(--accent-soft); }
 
 /* -------------------------------------------------------------- para quem */
 .audiences {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
   gap: 1px;
   background: var(--line-2);
   border: 1px solid var(--line-2);
 }
 .audience {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
   min-height: 250px;
-  padding: 38px 30px;
+  padding: 34px 24px;
   background: var(--bg-alt);
-  transition: background-color .18s ease;
+  transition: background-color .25s ease;
+}
+.audience::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s ease;
 }
 .audience:hover { background: var(--bg-hover); }
+.audience:hover::before { transform: scaleX(1); }
 
 .audience__badge {
   display: flex;
@@ -606,11 +629,16 @@ a:hover { color: var(--accent-soft); }
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--accent);
+  transition: background-color .25s ease, color .25s ease;
+}
+.audience:hover .audience__badge {
+  background: var(--accent);
+  color: var(--accent-ink);
 }
 .audience__title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.2;
 }
 .audience__desc {
@@ -674,7 +702,6 @@ a:hover { color: var(--accent-soft); }
   align-items: start;
 }
 .split--head { margin-bottom: 70px; }
-.split--center { align-items: center; }
 .split__body {
   padding-top: 8px;
   font-size: 17px;
@@ -755,35 +782,6 @@ a:hover { color: var(--accent-soft); }
   text-transform: uppercase;
   color: var(--accent);
 }
-
-/* ------------------------------------------------------------- quem somos */
-.framed {
-  position: relative;
-  margin: 0;
-  overflow: hidden;
-  border: 1px solid var(--line-2);
-}
-.framed img { width: 100%; filter: grayscale(.15) contrast(1.06); }
-.framed__scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(5, 7, 10, .15), rgba(5, 7, 10, .8));
-}
-.framed__caption {
-  position: absolute;
-  inset: auto 0 0 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-  padding: 26px 30px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--muted-3);
-}
-.framed__mark { color: var(--accent); }
 
 /* ---------------------------------------------------------------- contato */
 .contact {
@@ -926,20 +924,6 @@ select.field__input { appearance: none; cursor: pointer; }
   text-transform: uppercase;
 }
 
-.about-teachers-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  min-height: 44px;
-  margin-top: 1.75rem;
-  border-bottom: 1px solid var(--accent-line);
-  color: var(--accent);
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.5;
-}
-.about-teachers-link:hover { border-bottom-color: var(--accent); }
-
 /* ========================================================== responsivo */
 
 @media (max-width: 1100px) {
@@ -953,8 +937,9 @@ select.field__input { appearance: none; cursor: pointer; }
   .prose { padding-top: 0; }
   .h2--narrow, .h2--sm, .h2--tight { max-width: 34ch; }
 
-  .pillars,
-  .audiences { grid-template-columns: repeat(2, 1fr); }
+  .pillars { grid-template-columns: repeat(2, 1fr); }
+  .audiences { flex-wrap: wrap; }
+  .audience { flex-basis: 300px; padding: 38px 30px; }
   .pillar:nth-child(2n) { border-right: 0; }
 
   .techs__tablist { grid-template-columns: repeat(2, 1fr); }
@@ -982,6 +967,10 @@ select.field__input { appearance: none; cursor: pointer; }
   /* Sem largura para as duas colunas: banner em cima, tópicos embaixo. */
   .tech-panel { grid-template-columns: 1fr; gap: 36px; }
 
+  /* O menu recolhido quebra para uma segunda linha e o `gap` soma 16px à altura
+     do cabeçalho (85 → 101px). O recuo da rolagem acompanha, para os links do
+     menu não deixarem o topo da seção escondido atrás do cabeçalho fixo. */
+  :root { --header-h: 101px; }
   .site-header { flex-wrap: wrap; gap: 16px; }
   .nav-toggle { display: block; }
 
@@ -1044,7 +1033,6 @@ select.field__input { appearance: none; cursor: pointer; }
 
   .section { padding: 76px var(--gutter); }
   .pillars,
-  .audiences,
   .techs__tablist { grid-template-columns: 1fr; }
 
   .pillar { border-right: 0; border-bottom: 1px solid var(--line); }
@@ -1064,7 +1052,6 @@ select.field__input { appearance: none; cursor: pointer; }
   .tech-tab:last-child { border-bottom: 0; }
 
   .form { padding: 28px 22px; }
-  .framed__caption { flex-direction: column; align-items: flex-start; gap: 8px; }
   .logo--footer { width: 190px; height: 54px; }
   .logo--footer img { height: 194px; }
 }

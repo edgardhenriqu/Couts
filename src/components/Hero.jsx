@@ -30,11 +30,12 @@ export default function Hero() {
       <div className="hero__inner">
         <Eyebrow glow>Learn. Connect. Build.</Eyebrow>
 
-        <h1 className="hero__title">A engenharia automotiva que você não aprende na faculdade.</h1>
+        <h1 className="hero__title">Aprenda com quem vive a tecnologia automotiva na prática.</h1>
+
+        <p className="hero__tagline">A nova engenharia exige novas competências.</p>
 
         <p className="hero__lede">
-          “Treinamentos técnicos em tecnologias automotivas, desenvolvidos a partir de experiências
-          reais em desenvolvimento, testes e validação na indústria global.”
+          “Treinamentos técnicos em tecnologias automotivas, desenvolvidos a partir de experiências reais em desenvolvimento, testes e validação na indústria global.”
         </p>
 
         <div className="hero__actions">
@@ -43,9 +44,6 @@ export default function Hero() {
             <span className="btn__arrow" aria-hidden="true">
               →
             </span>
-          </a>
-          <a className="btn btn--ghost" href="#quem-somos">
-            Quem somos
           </a>
         </div>
       </div>

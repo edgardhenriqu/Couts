@@ -27,7 +27,7 @@ export default function Contact() {
     <section className="section" id="contato">
       <div className="wrap wrap--narrow contact">
         <div>
-          <Eyebrow>07 — Contato</Eyebrow>
+          <Eyebrow>06 — Contato</Eyebrow>
           <h2 className="h2 h2--tight">
             Quer fazer parte da próxima geração da engenharia automotiva?
           </h2>

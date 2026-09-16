@@ -7,7 +7,6 @@ import Trainings from './components/Trainings.jsx';
 import Audiences from './components/Audiences.jsx';
 import LearnConnectBuild from './components/LearnConnectBuild.jsx';
 import WhyUs from './components/WhyUs.jsx';
-import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
 import SiteFooter from './components/SiteFooter.jsx';
 import Teachers from './components/Teachers.jsx';
@@ -30,7 +29,6 @@ export default function App() {
         <Audiences />
         <LearnConnectBuild />
         <WhyUs />
-        <About />
         <Teachers />
         <Contact />
       </main>

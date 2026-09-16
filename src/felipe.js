@@ -1,54 +1,34 @@
 /**
- * Fonte: perfil público indicado pelo usuário, consultado em 10/09/2026.
- * https://de.linkedin.com/in/felipe-coutinho-164906133/en
- * Formação, experiência e foto enviadas pelo usuário (capturas do LinkedIn).
- * Em `atuacao` ficam só as experiências mais recentes, para o cartão não crescer.
- * Não atribuir ao Felipe cargos de vagas que ele compartilhou no feed.
+ * Conteúdo do bloco 5, “Quem está por trás”.
+ *
+ * Fonte: documento “Update estrutura LP”, vídeo de orientação e arte de
+ * referência (`ChatGPT Image 16 de set. de 2026, 16_16_29.png`, 1672 × 941)
+ * enviados pelo usuário em 16/09/2026.
+ *
+ * `felipe-industria-automotiva.webp` é a área da foto dessa arte (a partir de
+ * x = 600 px), com o vermelho trocado pelo azul do site e sem os restos do
+ * texto da coluna esquerda. “Indústria automotiva” e “Tecnologia • Pessoas •
+ * Mobilidade” fazem parte da imagem.
+ *
+ * Os `\n` repetem as quebras de linha da arte no desktop; abaixo de 1100px
+ * viram espaço e o texto quebra normalmente. “Mercedes‑Benz” usa hífen não
+ * separável (U+2011) para o nome não quebrar no meio.
  */
-import portrait from './assets/felipe-coutinho.jpg';
+import photo from './assets/felipe-industria-automotiva.webp';
 
 export const FELIPE = {
-  name: 'Felipe Coutinho',
-  initials: 'FC',
-  linkedin: 'https://www.linkedin.com/in/felipe-coutinho-164906133/',
-  portrait,
-  affiliation: 'Business Development Engineer · Murata · Munique, Alemanha',
-  bio: 'Engenheiro eletricista com formação em eletrônica automotiva, Felipe Coutinho é Business Development Engineer na Murata, em Munique. Antes, atuou na Tesla, no desenvolvimento do Autopilot, e na ALTEN, em projetos para Porsche e Continental. Tem MBA pela Fundação Getulio Vargas e certificações em gestão ágil, liderança e comunicação.',
+  photo,
+  photoAlt:
+    'Felipe Coutinho de terno em um corredor com luzes azuis e um carro ao fundo, com os dizeres “Indústria automotiva: tecnologia, pessoas, mobilidade”.',
+  intro:
+    'Profissional com sólida trajetória em tecnologia\ne engenharia automotiva, com atuação em projetos\nnacionais e internacionais e ampla vivência em\nsistemas, validação e diagnóstico veicular.',
   highlights: [
-    'Engenharia elétrica e eletrônica automotiva',
-    'Experiência profissional internacional',
-    'Gestão ágil de projetos com Scrum',
-    'Liderança, comunicação e oratória',
-  ],
-  details: [
-    {
-      id: 'atuacao',
-      title: 'Atuação profissional',
-      entries: [
-        { title: 'Murata', description: 'Business Development Engineer · 2025–atual · Munique' },
-        { title: 'Tesla', description: 'Autopilot Engineer · 2023–2024 · Munique' },
-        { title: 'ALTEN Germany', description: 'Function Owner de Power Management (Porsche AG) e System Test Engineer (Continental) · 2022–2023' },
-      ],
-    },
-    {
-      id: 'formacao',
-      title: 'Formação',
-      entries: [
-        { title: 'Fundação Getulio Vargas', description: 'MBA em Gestão de Negócios em Comércio e Vendas · 2019–2020' },
-        { title: 'Universidade Anhembi Morumbi', description: 'Graduação em Engenharia Elétrica · 2015–2018' },
-        { title: 'FATEC Santo André', description: 'Tecnologia em Eletrônica Automotiva · 2012–2014' },
-        { title: 'Idiomas', description: 'Português nativo e inglês profissional' },
-      ],
-    },
-    {
-      id: 'certificacoes',
-      title: 'Certificações',
-      entries: [
-        { title: 'Leadership', description: 'Escola Conquer · 2023' },
-        { title: 'T1 Driving authorization', description: 'Mercedes-Benz Deutschland · 2022' },
-        { title: 'Communication and Public Speaking', description: 'Escola Conquer · 2020' },
-        { title: 'Scrum — Agile project management', description: 'Impacta Tecnologia · 2019' },
-      ],
-    },
+    '10+ anos de experiência em tecnologia\ne engenharia automotiva',
+    'Experiência profissional no Brasil e na Europa',
+    'Atuação em projetos envolvendo TEXA,\nVolkswagen, Stellantis, Continental,\nMercedes‑Benz, Porsche, Tesla e Murata',
+    'Experiência em ADAS, Autopilot, eletrônica\nautomotiva, diagnóstico, infotainment e\nredes veiculares',
+    'Atuação em desenvolvimento, testes,\nvalidação e análise de sistemas automotivos',
+    'Experiência prática com ECUs, sensores,\nradares, câmeras, CAN e protocolos\nde diagnóstico',
+    'Vivência em diferentes etapas da cadeia\nautomotiva — do componente e diagnóstico\nà integração e validação no veículo',
   ],
 };

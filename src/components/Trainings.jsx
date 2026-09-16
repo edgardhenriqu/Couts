@@ -34,7 +34,7 @@ export default function Trainings() {
   const tech = TECHS[active];
 
   return (
-    <section className="section section--alt" id="tecnologias">
+    <section className="section section--alt" id="treinamentos">
       <div className="wrap">
         <Eyebrow>02 — Treinamentos</Eyebrow>
         <h2 className="h2 h2--narrow">Conhecimento técnico aplicado à realidade automotiva</h2>

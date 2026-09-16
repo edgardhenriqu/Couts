@@ -5,7 +5,7 @@ import carTrack from '../assets/car-track.png';
 
 export default function WhyUs() {
   return (
-    <section className="section">
+    <section className="section" id="por-que-aprender-conosco">
       <div className="wrap">
         <div className="split split--head">
           <div>

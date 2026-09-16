@@ -2,7 +2,7 @@ import { PILLARS } from '../data.js';
 
 export default function Pillars() {
   return (
-    <section className="pillars" id="treinamentos" aria-label="Áreas de treinamento">
+    <section className="pillars" aria-label="Áreas de treinamento">
       {PILLARS.map(({ code, title, note }) => (
         <article className="pillar" key={code}>
           <p className="pillar__code">{code}</p>

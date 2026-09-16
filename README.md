@@ -26,7 +26,7 @@ src/
   components/
     SiteHeader.jsx  Hero.jsx  Pillars.jsx  MarketSection.jsx  QuoteBand.jsx
     Trainings.jsx   Audiences.jsx  LearnConnectBuild.jsx  WhyUs.jsx
-    About.jsx       Teachers.jsx  Contact.jsx  SiteFooter.jsx
+    Teachers.jsx    Contact.jsx   SiteFooter.jsx
     Eyebrow.jsx     Logo.jsx
   assets/                     imagens e vídeo importados do projeto de design
 ```
@@ -76,27 +76,53 @@ Para trocar um banner, basta substituir o arquivo mantendo a proporção 16:9.
 Se a proporção mudar, ajuste o `aspect-ratio` de `.tech-panel__banner img` e o
 `BANNER_SIZE` em `data.js`.
 
-## Professores
+## Quem está por trás (bloco 5)
 
-A seção `#professores` fica logo após “Quem somos” na página principal e
-apresenta o perfil de Felipe Coutinho. O menu “Professores” e o link em
-“Quem somos” levam diretamente à seção. O site tem uma única entrada HTML.
+A seção `#professores` fica logo após “Por que aprender conosco” na página
+principal e apresenta Felipe Coutinho. O menu “Instrutores” leva diretamente à
+seção. O site tem uma única entrada HTML.
 
-- `src/components/Teachers.jsx` e `Teachers.css`: apresentação responsiva,
-  resumo, destaques e cartões de atuação, formação e certificações.
-- `src/felipe.js`: conteúdo do perfil e link para o LinkedIn.
+O bloco reproduz a arte de referência enviada pelo usuário em 16/09/2026
+(`ChatGPT Image 16 de set. de 2026, 16_16_29.png`, 1672 × 941), com as cores
+do site no lugar do vermelho. O conteúdo vem do documento “Update estrutura
+LP”: o perfil em bullet points, em vez do formato de currículo.
 
-Os dados foram consultados em 10/09/2026 no conteúdo público indexado do
-[perfil de Felipe](https://de.linkedin.com/in/felipe-coutinho-164906133/en).
-As certificações são as declaradas no perfil.
+- `src/components/Teachers.jsx` e `Teachers.css`: título, texto de abertura,
+  lista com ícones de check e a foto à direita.
+- `src/felipe.js`: texto de abertura, os 7 destaques, a foto e o texto
+  alternativo dela.
 
-A formação (FGV, Anhembi Morumbi e FATEC Santo André), a experiência
-profissional e a foto (`src/assets/felipe-coutinho.jpg`, 400 × 400) foram
-enviadas pelo usuário. Em “Atuação profissional” entram só as experiências
-mais recentes (Murata, Tesla e ALTEN), para o cartão não crescer além dos
-demais. A
-foto é importada em `src/felipe.js` como `FELIPE.portrait`; sem ela, o
-componente volta a exibir o monograma FC.
+### Como a arte foi traduzida
+
+- **Escala.** `--u` vale 1 px da arte na largura da tela (1 px a partir de
+  1672 px). A coluna de texto e a posição da foto são as medidas da arte vezes
+  `--u`, então a composição é a mesma em qualquer desktop. Acima de 1672 px ela
+  para de crescer e fica centralizada.
+- **Tipografia.** Os tamanhos seguem a escala das outras seções, e não os da
+  arte, que ficavam grandes demais no site: título de 32 a 44 px, texto de
+  abertura de 15,5 a 17,5 px e lista de 14,5 a 15,5 px. O texto fica
+  centralizado na altura da foto.
+- **Fonte.** A arte usa Montserrat (400 e 700), carregada no `index.html` junto
+  com as outras fontes. Ela vale só neste bloco.
+- **Rótulo.** “05 — Quem está por trás” fica acima do título, no mesmo padrão
+  (`Eyebrow`) das outras seções. Ele não existe na arte.
+- **Quebras de linha.** Os `\n` dos textos em `felipe.js` repetem as linhas da
+  arte no desktop (`white-space: pre-line`). Abaixo de 1100 px viram espaço e
+  o texto quebra normalmente.
+- **Foto.** `src/assets/felipe-industria-automotiva.webp` é a área da foto da
+  arte (a partir de x = 600 px). “Indústria automotiva” e “Tecnologia •
+  Pessoas • Mobilidade” fazem parte da imagem. O vermelho virou azul
+  transferindo o excesso de vermelho de cada pixel para verde e azul, com o
+  vermelho puro caindo em `#4DB8FF` (≈ `--accent`). Rosto, pescoço e mãos
+  ficaram protegidos por máscara, para a pele não mudar de cor, e os restos do
+  título da coluna esquerda foram apagados.
+- **Telas menores.** Abaixo de 1100 px o bloco vira coluna única: a foto abre
+  o bloco e o texto vem embaixo. No celular a foto usa recorte 4:5, que mantém
+  o rosto e os dizeres inteiros.
+
+Para trocar a foto por outra versão da arte, recorte a mesma área (a partir
+de x = 600 px de uma arte 1672 × 941) e atualize `width`/`height` em
+`Teachers.jsx` se o tamanho mudar.
 
 ## Props do canvas
 
