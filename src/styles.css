@@ -36,8 +36,9 @@
 
   --gutter:      48px;
   /* Largura do conteúdo. Cabeçalho, abertura, faixa das tecnologias e seções
-     alinham pela mesma borda: em telas largas, (tela − 1240px) / 2. */
-  --content:     1240px;
+     alinham pela mesma borda: em telas largas, (tela − 1720px) / 2; abaixo
+     disso, a margem padrão (--gutter). */
+  --content:     1720px;
   --edge:        max(var(--gutter), calc((100% - var(--content)) / 2));
   --header-h:    85px;
   --hero-dim:    .15;   /* prop `heroDim` do design: 15% */
@@ -110,7 +111,7 @@ a:hover { color: var(--accent-soft); }
 /* ------------------------------------------------------------- primitives */
 .wrap {
   width: 100%;
-  max-width: 1240px;
+  max-width: var(--content);
   margin-inline: auto;
 }
 .wrap--narrow { max-width: var(--content); }
@@ -126,7 +127,7 @@ a:hover { color: var(--accent-soft); }
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   align-items: start;
-  max-width: calc(1240px + var(--gutter) * 2);
+  max-width: calc(var(--content) + var(--gutter) * 2);
   margin-inline: auto;
   border-top: 0;
 }

@@ -4,7 +4,8 @@
 
    `--u` vale 1 px da arte na escala da tela (1 px a partir de 1672 px de
    largura) e posiciona a foto e a coluna de texto como na arte. Acima de
-   1672 px a composição para de crescer e fica centralizada. A tipografia usa
+   1672 px a escala para de crescer; o bloco ocupa a largura toda, com o texto
+   na borda do conteúdo e a foto indo até a lateral da tela. A tipografia usa
    a mesma escala das outras seções (título ~ `.h2`, texto 15–18 px), mais
    contida que a da arte, e o texto fica centralizado na altura da foto. */
 
@@ -21,11 +22,10 @@
   position: relative;
   display: flex;
   align-items: center;
-  max-width: 1672px;
   min-height: calc(941 * var(--u));
   margin-inline: auto;
   /* Texto na mesma borda das outras seções (ver --edge em styles.css). */
-  padding: 44px 0 44px max(var(--gutter), calc(48 * var(--u)), calc((min(100%, 1672px) - var(--content)) / 2));
+  padding: 44px 0 44px max(var(--gutter), calc(48 * var(--u)), calc((100% - var(--content)) / 2));
 }
 
 .founder__content {
@@ -115,14 +115,6 @@
   object-position: 60% 0;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 calc(90 * var(--u)));
   mask-image: linear-gradient(to right, transparent, #000 calc(90 * var(--u)));
-}
-
-/* Tela maior que a arte: a borda direita da foto também se dissolve. */
-@media (min-width: 1700px) {
-  .founder__photo {
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 90px, #000 calc(100% - 140px), transparent);
-    mask-image: linear-gradient(to right, transparent, #000 90px, #000 calc(100% - 140px), transparent);
-  }
 }
 
 /* ------------------------------------------------------------- responsivo */
