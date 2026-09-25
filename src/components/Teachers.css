@@ -24,7 +24,8 @@
   max-width: 1672px;
   min-height: calc(941 * var(--u));
   margin-inline: auto;
-  padding: 44px 0 44px max(var(--gutter), calc(48 * var(--u)));
+  /* Texto na mesma borda das outras seções (ver --edge em styles.css). */
+  padding: 44px 0 44px max(var(--gutter), calc(48 * var(--u)), calc((min(100%, 1672px) - var(--content)) / 2));
 }
 
 .founder__content {
@@ -103,8 +104,11 @@
 .founder__photo {
   position: absolute;
   top: 0;
-  left: calc(600 * var(--u));
-  width: calc(100% - 600 * var(--u));
+  /* A foto anda junto com o texto quando ele é empurrado para a borda do
+     conteúdo, para manter a composição da arte. */
+  --photo-x: max(calc(600 * var(--u)), calc(552 * var(--u) + (100% - var(--content)) / 2));
+  left: var(--photo-x);
+  width: calc(100% - var(--photo-x));
   height: 100%;
   max-width: none;
   object-fit: cover;

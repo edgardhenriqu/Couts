@@ -35,6 +35,10 @@
   --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
 
   --gutter:      48px;
+  /* Largura do conteúdo. Cabeçalho, abertura, faixa das tecnologias e seções
+     alinham pela mesma borda: em telas largas, (tela − 1240px) / 2. */
+  --content:     1240px;
+  --edge:        max(var(--gutter), calc((100% - var(--content)) / 2));
   --header-h:    85px;
   --hero-dim:    .15;   /* prop `heroDim` do design: 15% */
   --radius:      2px;
@@ -109,7 +113,7 @@ a:hover { color: var(--accent-soft); }
   max-width: 1240px;
   margin-inline: auto;
 }
-.wrap--narrow { max-width: 1100px; }
+.wrap--narrow { max-width: var(--content); }
 
 .section {
   padding: 120px var(--gutter);
@@ -263,7 +267,7 @@ a:hover { color: var(--accent-soft); }
   align-items: center;
   justify-content: space-between;
   gap: 32px;
-  padding: 18px var(--gutter);
+  padding: 18px var(--edge);
   background: rgba(5, 7, 10, .78);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -374,9 +378,7 @@ a:hover { color: var(--accent-soft); }
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1500px;
-  margin-inline: auto;
-  padding: 0 var(--gutter);
+  padding: 0 var(--edge);
 }
 
 .hero__title {
@@ -417,9 +419,11 @@ a:hover { color: var(--accent-soft); }
 }
 
 /* ---------------------------------------------------------------- pilares */
+/* O texto dos cartões (32px de recuo) fica na mesma borda do conteúdo. */
 .pillars {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  padding-inline: max(0px, calc((100% - var(--content)) / 2 - 32px));
   background: var(--bg-alt);
   border-bottom: 1px solid var(--line);
 }
