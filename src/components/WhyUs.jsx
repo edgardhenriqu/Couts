@@ -1,7 +1,8 @@
 import Eyebrow from './Eyebrow.jsx';
 import { REASONS } from '../data.js';
 
-import carTrack from '../assets/car-track.png';
+import carTrack from '../assets/carro-pista-testes-1448.webp';
+import carTrackSm from '../assets/carro-pista-testes-800.webp';
 
 export default function WhyUs() {
   return (
@@ -38,7 +39,9 @@ export default function WhyUs() {
           <figure className="claim__media">
             <img
               src={carTrack}
-              alt="Veículo em pista de testes"
+              srcSet={`${carTrackSm} 800w, ${carTrack} 1448w`}
+              sizes="(max-width: 1100px) 100vw, 600px"
+              alt="Carro esportivo cinza parado nos boxes de uma pista de testes"
               width={1448}
               height={1086}
               loading="lazy"

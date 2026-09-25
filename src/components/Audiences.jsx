@@ -1,12 +1,12 @@
 import Eyebrow from './Eyebrow.jsx';
 import { AUDIENCES } from '../data.js';
 
-export default function Audiences() {
+export default function Audiences({ eyebrow = '03 — Para quem é' }) {
   return (
-    <section className="section">
+    <section className="section" aria-labelledby="audiences-title">
       <div className="wrap">
-        <Eyebrow>03 — Para quem é</Eyebrow>
-        <h2 className="h2 h2--sm">
+        <Eyebrow>{eyebrow}</Eyebrow>
+        <h2 className="h2 h2--sm" id="audiences-title">
           Para quem quer estar preparado para a próxima geração da indústria automotiva.
         </h2>
 

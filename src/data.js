@@ -3,13 +3,20 @@
  * Mantido fora dos componentes para que texto e markup evoluam separados.
  */
 
-import bannerAdas from './assets/curso-adas.png';
-import bannerDiagnostico from './assets/curso-diagnostico.png';
-import bannerEletronica from './assets/curso-eletronica.png';
-import bannerArquitetura from './assets/curso-arquitetura.png';
+import bannerAdas from './assets/treinamento-adas-1672.webp';
+import bannerAdasSm from './assets/treinamento-adas-836.webp';
+import bannerDiagnostico from './assets/treinamento-diagnostico-1672.webp';
+import bannerDiagnosticoSm from './assets/treinamento-diagnostico-836.webp';
+import bannerEletronica from './assets/treinamento-eletronica-1672.webp';
+import bannerEletronicaSm from './assets/treinamento-eletronica-836.webp';
+import bannerArquitetura from './assets/treinamento-arquitetura-1672.webp';
+import bannerArquiteturaSm from './assets/treinamento-arquitetura-836.webp';
 
 /** Proporção nativa dos banners de curso (1672 × 941). */
 export const BANNER_SIZE = { width: 1672, height: 941 };
+
+/** `srcset` dos banners: 836 px para celular/painel, 1672 px para telas densas. */
+const bannerSet = (small, large) => `${small} 836w, ${large} 1672w`;
 
 /** Numera os tópicos como "01", "02", … igual ao design. */
 const numbered = (labels) =>
@@ -20,7 +27,14 @@ export const TECHS = [
     code: '01',
     short: 'ADAS',
     title: 'ADAS: Sistemas Avançados de Assistência ao Motorista',
+    slug: 'adas',
     banner: bannerAdas,
+    bannerSrcSet: bannerSet(bannerAdasSm, bannerAdas),
+    bannerAlt:
+      'Arte do treinamento de ADAS: SUV em um galpão com feixes de sensores detectando um pedestre e outro veículo.',
+    seoTitle: 'Treinamento em ADAS: sensores, fusão e validação | COUTS',
+    seoDescription:
+      'Treinamento em ADAS da COUTS: funções ACC, AEB e LKA, câmera, radar, fusão de sensores, arquitetura, desenvolvimento e validação de sistemas de assistência.',
     desc: 'Do sensor à função no veículo: como os sistemas de assistência são arquitetados, desenvolvidos e validados.',
     topics: numbered([
       'o que é ADAS',
@@ -37,7 +51,14 @@ export const TECHS = [
     code: '02',
     short: 'Diagnóstico Automotivo',
     title: 'Diagnóstico Automotivo',
+    slug: 'diagnostico-automotivo',
     banner: bannerDiagnostico,
+    bannerSrcSet: bannerSet(bannerDiagnosticoSm, bannerDiagnostico),
+    bannerAlt:
+      'Arte do treinamento de Diagnóstico Automotivo: carro com o capô aberto em uma oficina e um técnico usando um scanner de diagnóstico.',
+    seoTitle: 'Treinamento em Diagnóstico Automotivo: ECUs e CAN | COUTS',
+    seoDescription:
+      'Treinamento em diagnóstico automotivo: ECUs e módulos, leitura de falhas, sensores e atuadores, rede CAN, interpretação de dados e diagnóstico sistemático.',
     desc: 'Leitura, interpretação e método: como investigar falhas de forma sistemática em veículos modernos.',
     topics: numbered([
       'ECU/módulos',
@@ -54,7 +75,14 @@ export const TECHS = [
     code: '03',
     short: 'Eletrônica Automotiva',
     title: 'Eletrônica Automotiva: ECUs, Sensores e Atuadores',
+    slug: 'eletronica-automotiva',
     banner: bannerEletronica,
+    bannerSrcSet: bannerSet(bannerEletronicaSm, bannerEletronica),
+    bannerAlt:
+      'Arte do treinamento de Eletrônica Automotiva: SUV com os módulos eletrônicos e o chicote destacados em azul sobre a carroceria.',
+    seoTitle: 'Treinamento em Eletrônica Automotiva: ECUs e CAN/LIN | COUTS',
+    seoDescription:
+      'Treinamento em eletrônica automotiva: sensores, ECUs, microcontroladores, atuadores, alimentação, comunicação CAN/LIN e interação entre os módulos do veículo.',
     desc: 'A base eletrônica do veículo e como os módulos conversam entre si.',
     topics: numbered([
       'sensores',
@@ -73,7 +101,14 @@ export const TECHS = [
     code: '04',
     short: 'Arquitetura Eletrônica',
     title: 'Arquitetura Eletrônica do Veículo',
+    slug: 'arquitetura-eletronica-veicular',
     banner: bannerArquitetura,
+    bannerSrcSet: bannerSet(bannerArquiteturaSm, bannerArquitetura),
+    bannerAlt:
+      'Arte do treinamento de Arquitetura Eletrônica do Veículo: sedã com as redes CAN, LIN e Ethernet e os módulos destacados, ao lado de um painel de arquitetura zonal.',
+    seoTitle: 'Treinamento em Arquitetura Eletrônica Veicular (E/E) | COUTS',
+    seoDescription:
+      'Treinamento em arquitetura E/E: ECUs, redes CAN, LIN e Ethernet, gateways, domain controllers, arquitetura zonal e software-defined vehicle.',
     desc: 'Da arquitetura distribuída ao software-defined vehicle: como a topologia elétrica e eletrônica está evoluindo.',
     topics: numbered([
       'visão geral da arquitetura E/E',
@@ -91,12 +126,15 @@ export const TECHS = [
   },
 ];
 
+/** URL permanente da página de cada treinamento. */
+export const trainingPath = (tech) => `/treinamentos/${tech.slug}`;
+
 export const PILLARS = [
   { code: '01', title: 'ADAS', note: 'Sensores, fusão e validação de funções de assistência.' },
   { code: '02', title: 'Diagnóstico', note: 'ECUs, falhas, CAN e método sistemático.' },
   { code: '03', title: 'Eletrônica', note: 'ECUs, sensores, atuadores e comunicação.' },
   { code: '04', title: 'Arquitetura E/E', note: 'Redes, gateways e software-defined vehicle.' },
-];
+].map((pillar, i) => ({ ...pillar, href: trainingPath(TECHS[i]) }));
 
 export const MARKET_PARAGRAPHS = [
   'O setor automotivo está passando por uma das maiores transformações de sua história.',
@@ -156,18 +194,45 @@ export const REASONS = [
   },
 ];
 
+
+/**
+ * Links absolutos (`/#…`): funcionam na página inicial (rolagem na mesma
+ * página) e nas páginas de treinamento (voltam para a seção da inicial).
+ */
 export const NAV_LINKS = [
-  { href: '#treinamentos', label: 'Treinamentos' },
-  { href: '#por-que-aprender-conosco', label: 'Tecnologias' },
-  { href: '#professores', label: 'Instrutores' },
+  { href: '/#treinamentos', label: 'Treinamentos' },
+  { href: '/#por-que-aprender-conosco', label: 'Tecnologias' },
+  { href: '/#professores', label: 'Instrutores' },
 ];
 
-export const SOCIALS = ['WhatsApp', 'Instagram', 'LinkedIn', 'YouTube', 'TikTok'];
+export const COMPANY_OPTION = 'Capacitação para empresa ou equipe';
 
-export const TRAINING_OPTIONS = [
-  'ADAS',
-  'Diagnóstico Automotivo',
-  'Eletrônica Automotiva',
-  'Arquitetura Eletrônica',
-  'Outro',
+export const TRAINING_OPTIONS = [...TECHS.map((tech) => tech.short), COMPANY_OPTION, 'Outro'];
+
+/**
+ * Perguntas frequentes. Cada resposta usa apenas o que o site já afirma
+ * (treinamentos, conteúdo, público e experiência). Formato, carga horária,
+ * datas, valores e certificado não foram informados e por isso não aparecem.
+ */
+export const FAQ = [
+  {
+    q: 'Quais treinamentos a COUTS oferece?',
+    a: 'Quatro treinamentos técnicos em tecnologias automotivas: ADAS (Sistemas Avançados de Assistência ao Motorista), Diagnóstico Automotivo, Eletrônica Automotiva e Arquitetura Eletrônica do Veículo.',
+  },
+  {
+    q: 'Para quem são os treinamentos?',
+    a: 'Para estudantes de engenharia, engenheiros recém-formados, engenheiros e profissionais do setor, mecânicos e técnicos automotivos, e empresas e equipes técnicas que precisam desenvolver competências específicas da indústria automotiva.',
+  },
+  {
+    q: 'A COUTS atende empresas e equipes técnicas?',
+    a: 'Sim. Empresas e equipes técnicas estão entre o público dos treinamentos, com foco em competências específicas para os desafios tecnológicos da indústria automotiva. Para conversar sobre a sua equipe, use o formulário de contato e escolha “Capacitação para empresa ou equipe”.',
+  },
+  {
+    q: 'Qual é a experiência por trás dos treinamentos?',
+    a: 'Os treinamentos são desenvolvidos a partir de experiências reais em desenvolvimento, testes e validação na indústria automotiva. Felipe Coutinho, que está por trás da COUTS, tem mais de 10 anos de experiência em tecnologia e engenharia automotiva, no Brasil e na Europa, com atuação em ADAS, eletrônica automotiva, diagnóstico, infotainment e redes veiculares.',
+  },
+  {
+    q: 'Como recebo informações sobre as próximas turmas?',
+    a: 'Preencha o formulário de contato com o seu nome, e-mail e o treinamento de interesse. A equipe da COUTS retorna com as próximas turmas e conteúdos.',
+  },
 ];

@@ -1,39 +1,32 @@
 import SiteHeader from './components/SiteHeader.jsx';
-import Hero from './components/Hero.jsx';
-import Pillars from './components/Pillars.jsx';
-import MarketSection from './components/MarketSection.jsx';
-import QuoteBand from './components/QuoteBand.jsx';
-import Trainings from './components/Trainings.jsx';
-import Audiences from './components/Audiences.jsx';
-import LearnConnectBuild from './components/LearnConnectBuild.jsx';
-import WhyUs from './components/WhyUs.jsx';
-import Contact from './components/Contact.jsx';
 import SiteFooter from './components/SiteFooter.jsx';
-import Teachers from './components/Teachers.jsx';
+import HomePage from './pages/HomePage.jsx';
+import TrainingPage from './pages/TrainingPage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
 
-export default function App() {
+/**
+ * Casca comum a todas as páginas. Cada rota é um HTML estático próprio
+ * (ver `scripts/prerender.mjs`); a navegação entre páginas é por links comuns.
+ */
+export default function App({ route }) {
+  // Na 404 não há formulário: o "Fale com a equipe" leva ao da página inicial.
+  const contactHref = route.page === 'not-found' ? '/#contato' : '#contato';
+
   return (
     <>
-      <a className="skip-link" href="#hero">
+      <a className="skip-link" href="#conteudo">
         Ir para o conteúdo
       </a>
 
-      <SiteHeader />
+      <SiteHeader contactHref={contactHref} />
 
-      <main>
-        <Hero />
-        <Pillars />
-        <MarketSection />
-        <QuoteBand />
-        <Trainings />
-        <Audiences />
-        <LearnConnectBuild />
-        <WhyUs />
-        <Teachers />
-        <Contact />
+      <main id="conteudo" tabIndex={-1}>
+        {route.page === 'home' && <HomePage />}
+        {route.page === 'training' && <TrainingPage tech={route.tech} />}
+        {route.page === 'not-found' && <NotFoundPage />}
       </main>
 
-      <SiteFooter />
+      <SiteFooter contactHref={contactHref} />
     </>
   );
 }

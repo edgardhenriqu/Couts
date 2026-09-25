@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Logo from './Logo.jsx';
 import { NAV_LINKS } from '../data.js';
 
-export default function SiteHeader() {
+export default function SiteHeader({ contactHref = '#contato' }) {
   const [open, setOpen] = useState(false);
 
   // Esc fecha o menu mobile e devolve o foco ao botão.
@@ -23,8 +23,8 @@ export default function SiteHeader() {
 
   return (
     <header className="site-header">
-      <a className="logo logo--header" href="#hero" aria-label="COUTS — início">
-        <Logo />
+      <a className="logo logo--header" href="/" aria-label="COUTS — página inicial">
+        <Logo alt="" />
       </a>
 
       <button
@@ -49,7 +49,7 @@ export default function SiteHeader() {
             {label}
           </a>
         ))}
-        <a className="site-nav__cta" href="#contato">
+        <a className="site-nav__cta" href={contactHref} data-track="contact_click">
           Falar com a equipe
         </a>
       </nav>

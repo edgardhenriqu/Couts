@@ -1,4 +1,5 @@
-import carMountain from '../assets/car-mountain.png';
+import carMountain from '../assets/carro-estrada-montanha-1448.webp';
+import carMountainSm from '../assets/carro-estrada-montanha-800.webp';
 
 export default function QuoteBand() {
   return (
@@ -6,7 +7,9 @@ export default function QuoteBand() {
       <img
         className="band__img"
         src={carMountain}
-        alt="Veículo em estrada de montanha"
+        srcSet={`${carMountainSm} 800w, ${carMountain} 1448w`}
+        sizes="100vw"
+        alt="Carro esportivo escuro em uma estrada de montanha ao pôr do sol"
         width={1448}
         height={1086}
         loading="lazy"

@@ -5,10 +5,39 @@ App React (Vite) do design **`COUTS Landing.dc.html`**
 
 ```sh
 npm install
-npm run dev       # http://localhost:5173
-npm run build     # gera dist/
+npm run dev       # http://localhost:5173 (SPA, sem prerender)
+npm run build     # bundle + SSR + prerender → dist/
 npm run preview   # serve o dist/
 ```
+
+## SEO e geração estática
+
+O site é React + Vite, mas cada página sai do build como **HTML completo**
+(conteúdo, title, description, canonical, Open Graph e JSON-LD), sem depender
+de JavaScript para ser lida por Google, Bing, LinkedIn ou WhatsApp. O React
+só hidrata o HTML pronto.
+
+| Etapa | O que faz |
+| ----- | --------- |
+| `vite build` | bundle do navegador em `dist/` (`index.html` vira o molde) |
+| `vite build --ssr src/entry-server.jsx` | versão Node dos componentes |
+| `scripts/prerender.mjs` | grava um HTML por rota, `404.html`, `sitemap.xml` e `robots.txt` |
+
+- **Rotas e metadados:** `src/routes.js` (title, description, OG, JSON-LD de
+  cada página). Novas páginas entram ali e ganham sitemap automaticamente.
+- **Páginas de treinamento:** `/treinamentos/<slug>`, geradas a partir de
+  `TECHS` em `src/data.js` (`slug`, `seoTitle`, `seoDescription`, `bannerAlt`).
+- **Vercel:** `vercel.json` liga `cleanUrls` (serve `/treinamentos/adas` a
+  partir de `adas.html`), remove barra final, cache longo em `/assets/` e
+  cabeçalhos de segurança.
+- **Contato, redes e analytics:** `src/site.js` e `src/analytics.js`, ligados
+  por variáveis de ambiente — veja `.env.example`. Nenhum canal está
+  configurado ainda: sem eles o formulário avisa que o envio está indisponível.
+- **Imagens:** WebP com `srcset` (originais em PNG ficam no histórico do Git).
+  Ícones e imagens de compartilhamento ficam em `public/`.
+
+`base` do Vite agora é `/` (absoluto): com páginas em subpastas, caminhos
+relativos (`./assets`) quebrariam.
 
 ## Estrutura
 
@@ -23,6 +52,11 @@ src/
   config.js                   props de autoria do design
   hooks/
     useBackgroundVideo.js     velocidade, reduced-motion e pausa fora da tela
+  site.js                     dados institucionais e canais de contato
+  routes.js                   rotas, metadados e JSON-LD
+  analytics.js                eventos GA4/dataLayer
+  entry-server.jsx            render para o prerender
+  pages/                      HomePage, TrainingPage, NotFoundPage
   components/
     SiteHeader.jsx  Hero.jsx  Pillars.jsx  MarketSection.jsx  QuoteBand.jsx
     Trainings.jsx   Audiences.jsx  LearnConnectBuild.jsx  WhyUs.jsx
@@ -55,7 +89,7 @@ clique, navegação por setas/Home/End e `tabIndex` móvel entre as abas.
 
 ### Banners de curso
 
-Cada curso tem seu próprio banner (`src/assets/curso-*.png`, apontado por
+Cada curso tem seu próprio banner (`src/assets/treinamento-*-1672.webp` + versão 836 px, apontados por
 `banner` em `TECHS`). Eles já trazem título, descrição e ícones de apoio na
 própria arte, o que define como o painel é montado:
 
@@ -141,39 +175,12 @@ precisar existir no site, os dados já estão prontos em `TECHS`.
 
 ## Pendências conhecidas
 
-- **Formulário sem back-end.** `Contact.jsx` é controlado e valida pelo
-  navegador, mas o `onSubmit` só troca para o estado "enviado" do design.
-  Ponto de integração: o comentário dentro de `onSubmit` — o objeto `values`
-  já é o payload completo.
-- **Links de redes sociais** apontam para `#contato`; o design não trazia URLs.
-- **Peso dos assets: ~21 MB** no `dist/`, contra 211 kB de JS e 18 kB de CSS:
-  3 fotos de ~2,1 MB, 4 banners de curso de ~1,7–2,1 MB, logo de 1 MB e vídeo
-  de 5,7 MB. Todos vêm sem compressão. Antes de publicar, vale gerar derivados
-  com o `ffmpeg`:
-
-  ```sh
-  # fotos: ~90 % menores, sem perda visível
-  for f in car-city car-mountain car-track; do
-    ffmpeg -i "src/assets/$f.png" -vf scale=1600:-2 -q:v 78 "src/assets/$f.webp"
-  done
-
-  # banners de curso: têm texto embutido, então use qualidade mais alta
-  for f in curso-adas curso-diagnostico curso-eletronica curso-arquitetura; do
-    ffmpeg -i "src/assets/$f.png" -q:v 90 "src/assets/$f.webp"
-  done
-
-  # vídeo do hero
-  ffmpeg -i src/assets/hero-car.mp4 -c:v libx264 -crf 28 -preset slow -an \
-    -movflags +faststart src/assets/hero-car.opt.mp4
-  ```
-
-  Depois troque os `import` nos componentes (e em `data.js`, no caso dos
-  banners). Confira o texto dos banners depois de converter.
-
-- **`src/assets/concept-car.png` não é mais usado** — era o placeholder único
-  dos quatro painéis de treinamento, substituído pelos banners de curso. O
-  Vite não inclui assets sem `import`, então ele não vai para o `dist/`; pode
-  ser apagado quando quiser.
+- **Canais de contato não configurados.** O formulário envia de verdade
+  (endpoint → e-mail → WhatsApp), mas nenhum canal existe no projeto. Configure
+  ao menos `VITE_CONTACT_ENDPOINT` ou `VITE_CONTACT_EMAIL` antes de publicar.
+- **Redes sociais** só aparecem com URL configurada (`.env.example`).
+- **Vídeo do hero:** `hero-carro-720.mp4` (1,8 MB) e `hero-carro-360.mp4`
+  (0,6 MB, servido abaixo de 760 px), ambos sem áudio e com `faststart`.
 - **`muted` no vídeo do hero.** React aplica `muted` como propriedade, o que
   pode chegar depois de o Chrome avaliar o autoplay — o autoplay é bloqueado e
   o download do vídeo fica adiado indefinidamente (`readyState` 0). Por isso

@@ -1,105 +1,256 @@
-import { useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 import Eyebrow from './Eyebrow.jsx';
 import { TRAINING_OPTIONS } from '../data.js';
+import { CONTACT, whatsappHref } from '../site.js';
+import { track } from '../analytics.js';
 
-const EMPTY = { nome: '', email: '', telefone: '', treinamento: TRAINING_OPTIONS[0] };
+const EMPTY = { nome: '', empresa: '', email: '', telefone: '', interesse: '', mensagem: '' };
 
-export default function Contact() {
-  const [values, setValues] = useState(EMPTY);
-  const [sent, setSent] = useState(false);
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function validate(values) {
+  const errors = {};
+  if (values.nome.trim().length < 2) errors.nome = 'Informe o seu nome.';
+  if (!EMAIL_RE.test(values.email.trim())) errors.email = 'Informe um e-mail válido.';
+  if (values.telefone && values.telefone.replace(/\D/g, '').length < 10)
+    errors.telefone = 'Informe o telefone com DDD.';
+  return errors;
+}
+
+/** Texto usado quando o envio cai para e-mail ou WhatsApp. */
+function summary(values) {
+  return [
+    `Nome: ${values.nome}`,
+    values.empresa && `Empresa: ${values.empresa}`,
+    `E-mail: ${values.email}`,
+    values.telefone && `Telefone: ${values.telefone}`,
+    `Interesse: ${values.interesse}`,
+    values.mensagem && `Mensagem: ${values.mensagem}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+}
+
+/**
+ * Formulário de contato.
+ *
+ * Envio, na ordem: `CONTACT.formEndpoint` (POST JSON) → e-mail (`mailto:`) →
+ * WhatsApp. Sem nenhum canal configurado em `src/site.js`, o formulário avisa
+ * que o envio está indisponível em vez de simular sucesso.
+ *
+ * Antispam: campo-isca invisível (`website`) e tempo mínimo de preenchimento.
+ */
+export default function Contact({
+  eyebrow = '07 — Contato',
+  title = 'Quer fazer parte da próxima geração da engenharia automotiva?',
+  defaultInterest = TRAINING_OPTIONS[0],
+}) {
+  const [values, setValues] = useState({ ...EMPTY, interesse: defaultInterest });
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | handoff | error | unavailable
+  const startedAt = useRef(0);
+  const id = useId();
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
 
   const onChange = (event) => {
     const { name, value } = event.target;
     setValues((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
+    const form = event.currentTarget;
 
-    // Sem back-end: reproduz o estado "enviado" do design.
-    // Troque por um POST ao endpoint real quando ele existir — `values` já
-    // carrega o payload completo.
-    setSent(true);
+    const found = validate(values);
+    setErrors(found);
+    const firstInvalid = Object.keys(found)[0];
+    if (firstInvalid) {
+      form.elements[firstInvalid]?.focus();
+      track('form_error', { field: firstInvalid });
+      return;
+    }
+
+    // Robôs preenchem o campo-isca ou enviam em menos de 2 s: finge sucesso.
+    if (form.elements.website?.value || Date.now() - startedAt.current < 2000) {
+      setStatus('sent');
+      return;
+    }
+
+    const payload = { ...values, pagina: window.location.href };
+
+    if (CONTACT.formEndpoint) {
+      setStatus('sending');
+      try {
+        const res = await fetch(CONTACT.formEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setStatus('sent');
+        setValues({ ...EMPTY, interesse: defaultInterest });
+        track('form_submit', { interest: values.interesse, method: 'endpoint' });
+      } catch {
+        setStatus('error');
+        track('form_error', { field: 'network' });
+      }
+      return;
+    }
+
+    if (CONTACT.email) {
+      const subject = `Contato pelo site — ${values.interesse}`;
+      window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(summary(values))}`;
+      setStatus('handoff');
+      track('form_submit', { interest: values.interesse, method: 'email' });
+      return;
+    }
+
+    const wa = whatsappHref();
+    if (wa) {
+      const url = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(`${CONTACT.whatsappMessage}\n\n${summary(values)}`)}`;
+      window.open(url, '_blank', 'noopener');
+      setStatus('handoff');
+      track('form_submit', { interest: values.interesse, method: 'whatsapp' });
+      return;
+    }
+
+    if (import.meta.env.DEV) {
+      console.warn('[Contato] Nenhum canal configurado: defina VITE_CONTACT_ENDPOINT, VITE_CONTACT_EMAIL ou VITE_WHATSAPP_NUMBER.');
+    }
+    setStatus('unavailable');
   };
+
+  const fieldProps = (name) => ({
+    id: `${id}-${name}`,
+    name,
+    className: 'field__input',
+    value: values[name],
+    onChange,
+    'aria-invalid': errors[name] ? true : undefined,
+    'aria-describedby': errors[name] ? `${id}-${name}-error` : undefined,
+  });
+
+  const fieldError = (name) =>
+    errors[name] ? (
+      <span className="field__error" id={`${id}-${name}-error`}>
+        {errors[name]}
+      </span>
+    ) : null;
+
+  const messages = {
+    idle: 'Seus dados são usados apenas para retornar o seu contato sobre os treinamentos.',
+    sending: 'Enviando…',
+    sent: 'Recebemos sua mensagem. Em breve a equipe da COUTS entra em contato.',
+    handoff: 'Abrimos o seu aplicativo para concluir o envio. Se nada aconteceu, tente novamente.',
+    error: 'Não foi possível enviar agora. Verifique sua conexão e tente de novo.',
+    unavailable: 'O envio pelo site está temporariamente indisponível. Tente novamente mais tarde.',
+  };
+
+  const wa = whatsappHref();
 
   return (
-    <section className="section" id="contato">
+    <section className="section" id="contato" aria-labelledby={`${id}-title`}>
       <div className="wrap wrap--narrow contact">
         <div>
-          <Eyebrow>06 — Contato</Eyebrow>
-          <h2 className="h2 h2--tight">
-            Quer fazer parte da próxima geração da engenharia automotiva?
+          <Eyebrow>{eyebrow}</Eyebrow>
+          <h2 className="h2 h2--tight" id={`${id}-title`}>
+            {title}
           </h2>
           <p className="contact__note">
             Preencha os dados e conte qual tecnologia você quer dominar. Retornamos com as próximas
             turmas e conteúdos.
           </p>
+          <p className="contact__note contact__note--b2b">
+            Para capacitar uma equipe, informe a empresa e escolha “Capacitação para empresa ou
+            equipe”.
+          </p>
+          {wa && (
+            <a
+              className="btn btn--ghost contact__whatsapp"
+              href={wa}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-track="whatsapp_click"
+              aria-label="Conversar com a COUTS pelo WhatsApp (abre em nova aba)"
+            >
+              Conversar pelo WhatsApp
+            </a>
+          )}
         </div>
 
-        <form className="form" onSubmit={onSubmit}>
-          <label className="field">
-            <span className="field__label">Nome</span>
-            <input
-              className="field__input"
-              type="text"
-              name="nome"
-              autoComplete="name"
-              required
-              value={values.nome}
-              onChange={onChange}
-            />
-          </label>
+        <form className="form" onSubmit={onSubmit} noValidate>
+          <div className="field">
+            <label className="field__label" htmlFor={`${id}-nome`}>
+              Nome
+            </label>
+            <input {...fieldProps('nome')} type="text" autoComplete="name" required />
+            {fieldError('nome')}
+          </div>
 
-          <label className="field">
-            <span className="field__label">E-mail</span>
-            <input
-              className="field__input"
-              type="email"
-              name="email"
-              autoComplete="email"
-              required
-              value={values.email}
-              onChange={onChange}
-            />
-          </label>
+          <div className="field">
+            <label className="field__label" htmlFor={`${id}-empresa`}>
+              Empresa <span className="field__optional">(opcional)</span>
+            </label>
+            <input {...fieldProps('empresa')} type="text" autoComplete="organization" />
+          </div>
 
-          <label className="field">
-            <span className="field__label">Telefone / WhatsApp</span>
-            <input
-              className="field__input"
-              type="tel"
-              name="telefone"
-              autoComplete="tel"
-              value={values.telefone}
-              onChange={onChange}
-            />
-          </label>
+          <div className="field">
+            <label className="field__label" htmlFor={`${id}-email`}>
+              E-mail
+            </label>
+            <input {...fieldProps('email')} type="email" autoComplete="email" inputMode="email" required />
+            {fieldError('email')}
+          </div>
 
-          <label className="field">
-            <span className="field__label">Qual treinamento você tem interesse?</span>
-            <select
-              className="field__input"
-              name="treinamento"
-              value={values.treinamento}
-              onChange={onChange}
-            >
+          <div className="field">
+            <label className="field__label" htmlFor={`${id}-telefone`}>
+              Telefone / WhatsApp <span className="field__optional">(opcional)</span>
+            </label>
+            <input {...fieldProps('telefone')} type="tel" autoComplete="tel" inputMode="tel" />
+            {fieldError('telefone')}
+          </div>
+
+          <div className="field">
+            <label className="field__label" htmlFor={`${id}-interesse`}>
+              Qual treinamento você tem interesse?
+            </label>
+            <select {...fieldProps('interesse')}>
               {TRAINING_OPTIONS.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
               ))}
             </select>
-          </label>
+          </div>
 
-          <button className="form__submit" type="submit" disabled={sent}>
-            {sent ? 'Inscrição registrada' : 'Quero fazer parte'}
+          <div className="field">
+            <label className="field__label" htmlFor={`${id}-mensagem`}>
+              Como podemos ajudar? <span className="field__optional">(opcional)</span>
+            </label>
+            <textarea {...fieldProps('mensagem')} rows={3} maxLength={1500} />
+          </div>
+
+          {/* Campo-isca: invisível para pessoas, preenchido por robôs. */}
+          <div className="form__trap" aria-hidden="true">
+            <label htmlFor={`${id}-website`}>Não preencha este campo</label>
+            <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
+          </div>
+
+          <button className="form__submit" type="submit" disabled={status === 'sending' || status === 'sent'}>
+            {status === 'sent' ? 'Mensagem enviada' : status === 'sending' ? 'Enviando…' : 'Solicitar contato'}
           </button>
 
-          <p className="form__hint" aria-live="polite">
-            {sent
-              ? 'Recebemos seus dados. Em breve entraremos em contato.'
-              : 'Seus dados são usados apenas para contato sobre os treinamentos.'}
+          <p
+            className={status === 'error' || status === 'unavailable' ? 'form__hint form__hint--error' : 'form__hint'}
+            role="status"
+            aria-live="polite"
+          >
+            {messages[status]}
           </p>
         </form>
       </div>

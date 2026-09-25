@@ -1,11 +1,28 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 
 import App from './App.jsx';
+import { matchRoute } from './routes.js';
+import { initAnalytics, initClickTracking, track } from './analytics.js';
 import './styles.css';
 
-createRoot(document.getElementById('root')).render(
+const route = matchRoute(window.location.pathname);
+const container = document.getElementById('root');
+const app = (
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <App route={route} />
+  </StrictMode>
 );
+
+// No build, cada página chega com o HTML pronto (prerender) e só é hidratada.
+// No `vite dev` o #root vem vazio e o app é montado do zero.
+if (container.firstElementChild) {
+  hydrateRoot(container, app);
+} else {
+  document.title = route.title;
+  createRoot(container).render(app);
+}
+
+initAnalytics();
+initClickTracking();
+if (route.page === 'training') track('service_view', { training: route.tech.short });

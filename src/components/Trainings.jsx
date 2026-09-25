@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
 import Eyebrow from './Eyebrow.jsx';
-import { BANNER_SIZE, TECHS } from '../data.js';
+import { BANNER_SIZE, TECHS, trainingPath } from '../data.js';
 
 export default function Trainings() {
   const [active, setActive] = useState(0);
@@ -30,8 +30,6 @@ export default function Trainings() {
     event.preventDefault();
     focusTab(next);
   };
-
-  const tech = TECHS[active];
 
   return (
     <section className="section section--alt" id="treinamentos">
@@ -66,45 +64,67 @@ export default function Trainings() {
             ))}
           </div>
 
-          <div
-            className="tech-panel"
-            role="tabpanel"
-            id={`panel-${tech.code}`}
-            aria-labelledby={`tab-${tech.code}`}
-            tabIndex={0}
-          >
-            {/*
-              O banner do curso já traz título e descrição na própria arte. Em
-              telas largas esse par fica só para leitores de tela e indexação
-              (ver `.tech-panel__heading`); em telas estreitas, onde o texto da
-              imagem fica pequeno demais, ele reaparece como texto de verdade.
-              A imagem entra como decorativa para não duplicar a leitura.
-            */}
-            <div className="tech-panel__heading">
-              <h3 className="tech-panel__title">{tech.title}</h3>
-              <p className="tech-panel__desc">{tech.desc}</p>
+          {/*
+            Os quatro painéis ficam no HTML (padrão ARIA de abas, com `hidden`
+            nos inativos): todo o conteúdo programático e os links para as
+            páginas dos treinamentos chegam aos buscadores sem depender de JS.
+          */}
+          {TECHS.map((tech, i) => (
+            <div
+              key={tech.code}
+              className="tech-panel"
+              role="tabpanel"
+              id={`panel-${tech.code}`}
+              aria-labelledby={`tab-${tech.code}`}
+              tabIndex={0}
+              hidden={i !== active}
+            >
+              {/*
+                O banner do curso já traz título e descrição na própria arte. Em
+                telas largas esse par fica só para leitores de tela e indexação
+                (ver `.tech-panel__heading`); em telas estreitas, onde o texto da
+                imagem fica pequeno demais, ele reaparece como texto de verdade.
+                A imagem entra como decorativa para não duplicar a leitura.
+              */}
+              <div className="tech-panel__heading">
+                <h3 className="tech-panel__title">{tech.title}</h3>
+                <p className="tech-panel__desc">{tech.desc}</p>
+              </div>
+
+              <figure className="tech-panel__banner">
+                <img
+                  src={tech.banner}
+                  srcSet={tech.bannerSrcSet}
+                  sizes="(max-width: 1100px) calc(100vw - 64px), 640px"
+                  alt=""
+                  width={BANNER_SIZE.width}
+                  height={BANNER_SIZE.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+
+              <div className="tech-panel__body">
+                <ol className="topics">
+                  {tech.topics.map(({ n, label }) => (
+                    <li key={n}>
+                      <span className="topics__n">{n}</span>
+                      <span className="topics__label">{label}</span>
+                    </li>
+                  ))}
+                </ol>
+
+                <a
+                  className="text-link"
+                  href={trainingPath(tech)}
+                  data-track="service_click"
+                  data-track-label={tech.short}
+                >
+                  Conheça o treinamento de {tech.short} <span aria-hidden="true">→</span>
+                </a>
+              </div>
             </div>
-
-            <figure className="tech-panel__banner">
-              <img
-                src={tech.banner}
-                alt=""
-                width={BANNER_SIZE.width}
-                height={BANNER_SIZE.height}
-                loading="lazy"
-                decoding="async"
-              />
-            </figure>
-
-            <ol className="topics">
-              {tech.topics.map(({ n, label }) => (
-                <li key={n}>
-                  <span className="topics__n">{n}</span>
-                  <span className="topics__label">{label}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
+          ))}
         </div>
       </div>
     </section>

@@ -22,6 +22,20 @@ export default function Teachers() {
             Experiência construída <span>dentro da indústria automotiva</span>
           </h2>
 
+          <p className="founder__name">
+            <strong>{FELIPE.name}</strong>
+            <a
+              href={FELIPE.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-track="linkedin_click"
+              data-track-label={FELIPE.name}
+            >
+              LinkedIn <span aria-hidden="true">↗</span>
+              <span className="sr-only"> de {FELIPE.name} (abre em nova aba)</span>
+            </a>
+          </p>
+
           <p className="founder__intro">{FELIPE.intro}</p>
 
           <ul className="founder__list">
@@ -37,6 +51,8 @@ export default function Teachers() {
         <img
           className="founder__photo"
           src={FELIPE.photo}
+          srcSet={FELIPE.photoSrcSet}
+          sizes="(max-width: 620px) 100vw, (max-width: 1100px) 860px, 65vw"
           alt={FELIPE.photoAlt}
           width={1072}
           height={941}
