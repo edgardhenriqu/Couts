@@ -4,18 +4,67 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/treinamentos",
+      "destination": "/#treinamentos",
+      "permanent": true
+    },
+    {
+      "source": "/treinamentos/adas",
+      "destination": "/#tab-01",
+      "permanent": true
+    },
+    {
+      "source": "/treinamentos/diagnostico-automotivo",
+      "destination": "/#tab-02",
+      "permanent": true
+    },
+    {
+      "source": "/treinamentos/eletronica-automotiva",
+      "destination": "/#tab-03",
+      "permanent": true
+    },
+    {
+      "source": "/treinamentos/arquitetura-eletronica-veicular",
+      "destination": "/#tab-04",
+      "permanent": true
+    },
+    {
+      "source": "/treinamentos/:path*",
+      "destination": "/#treinamentos",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=()"
+        }
       ]
     }
   ]

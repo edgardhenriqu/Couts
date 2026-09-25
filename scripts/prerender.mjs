@@ -9,8 +9,8 @@
  *    já no HTML, sem depender de JavaScript — além de sitemap.xml e
  *    robots.txt.
  *
- * Saída: /index.html, /treinamentos/<slug>.html e /404.html. Na Vercel,
- * `cleanUrls` (vercel.json) serve /treinamentos/adas a partir de adas.html.
+ * Saída: /index.html e /404.html (a Vercel serve o 404.html para endereços
+ * inexistentes). Novas rotas em src/routes.js geram novos arquivos aqui.
  */
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';

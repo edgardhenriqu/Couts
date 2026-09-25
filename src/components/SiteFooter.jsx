@@ -1,5 +1,5 @@
 import Logo from './Logo.jsx';
-import { TECHS, trainingPath } from '../data.js';
+import { TECHS, trainingHref } from '../data.js';
 import { CONTACT, SITE, SOCIAL_LINKS } from '../site.js';
 
 export default function SiteFooter({ contactHref = '#contato' }) {
@@ -17,8 +17,8 @@ export default function SiteFooter({ contactHref = '#contato' }) {
           <p className="site-footer__heading">Treinamentos</p>
           <ul>
             {TECHS.map((tech) => (
-              <li key={tech.slug}>
-                <a href={trainingPath(tech)}>{tech.short}</a>
+              <li key={tech.code}>
+                <a href={trainingHref(tech)}>{tech.short}</a>
               </li>
             ))}
           </ul>

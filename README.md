@@ -25,10 +25,12 @@ só hidrata o HTML pronto.
 
 - **Rotas e metadados:** `src/routes.js` (title, description, OG, JSON-LD de
   cada página). Novas páginas entram ali e ganham sitemap automaticamente.
-- **Páginas de treinamento:** `/treinamentos/<slug>`, geradas a partir de
-  `TECHS` em `src/data.js` (`slug`, `seoTitle`, `seoDescription`, `bannerAlt`).
-- **Vercel:** `vercel.json` liga `cleanUrls` (serve `/treinamentos/adas` a
-  partir de `adas.html`), remove barra final, cache longo em `/assets/` e
+- **Treinamentos:** ficam só na página inicial, nas abas de `#treinamentos`.
+  `/#tab-01` … `/#tab-04` abrem a aba correspondente (usado pelos cartões das
+  tecnologias e pelo rodapé). As antigas páginas `/treinamentos/...` foram
+  removidas e redirecionam (308) para essas âncoras em `vercel.json`.
+- **Vercel:** `vercel.json` liga `cleanUrls`, remove barra final, redireciona
+  as antigas páginas de treinamento, aplica cache longo em `/assets/` e
   cabeçalhos de segurança.
 - **Contato, redes e analytics:** `src/site.js` e `src/analytics.js`, ligados
   por variáveis de ambiente — veja `.env.example`. Nenhum canal está
@@ -56,7 +58,7 @@ src/
   routes.js                   rotas, metadados e JSON-LD
   analytics.js                eventos GA4/dataLayer
   entry-server.jsx            render para o prerender
-  pages/                      HomePage, TrainingPage, NotFoundPage
+  pages/                      HomePage, NotFoundPage
   components/
     SiteHeader.jsx  Hero.jsx  Pillars.jsx  MarketSection.jsx  QuoteBand.jsx
     Trainings.jsx   Audiences.jsx  LearnConnectBuild.jsx  WhyUs.jsx

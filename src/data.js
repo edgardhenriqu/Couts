@@ -27,14 +27,8 @@ export const TECHS = [
     code: '01',
     short: 'ADAS',
     title: 'ADAS: Sistemas Avançados de Assistência ao Motorista',
-    slug: 'adas',
     banner: bannerAdas,
     bannerSrcSet: bannerSet(bannerAdasSm, bannerAdas),
-    bannerAlt:
-      'Arte do treinamento de ADAS: SUV em um galpão com feixes de sensores detectando um pedestre e outro veículo.',
-    seoTitle: 'Treinamento em ADAS: sensores, fusão e validação | COUTS',
-    seoDescription:
-      'Treinamento em ADAS da COUTS: funções ACC, AEB e LKA, câmera, radar, fusão de sensores, arquitetura, desenvolvimento e validação de sistemas de assistência.',
     desc: 'Do sensor à função no veículo: como os sistemas de assistência são arquitetados, desenvolvidos e validados.',
     topics: numbered([
       'o que é ADAS',
@@ -51,14 +45,8 @@ export const TECHS = [
     code: '02',
     short: 'Diagnóstico Automotivo',
     title: 'Diagnóstico Automotivo',
-    slug: 'diagnostico-automotivo',
     banner: bannerDiagnostico,
     bannerSrcSet: bannerSet(bannerDiagnosticoSm, bannerDiagnostico),
-    bannerAlt:
-      'Arte do treinamento de Diagnóstico Automotivo: carro com o capô aberto em uma oficina e um técnico usando um scanner de diagnóstico.',
-    seoTitle: 'Treinamento em Diagnóstico Automotivo: ECUs e CAN | COUTS',
-    seoDescription:
-      'Treinamento em diagnóstico automotivo: ECUs e módulos, leitura de falhas, sensores e atuadores, rede CAN, interpretação de dados e diagnóstico sistemático.',
     desc: 'Leitura, interpretação e método: como investigar falhas de forma sistemática em veículos modernos.',
     topics: numbered([
       'ECU/módulos',
@@ -75,14 +63,8 @@ export const TECHS = [
     code: '03',
     short: 'Eletrônica Automotiva',
     title: 'Eletrônica Automotiva: ECUs, Sensores e Atuadores',
-    slug: 'eletronica-automotiva',
     banner: bannerEletronica,
     bannerSrcSet: bannerSet(bannerEletronicaSm, bannerEletronica),
-    bannerAlt:
-      'Arte do treinamento de Eletrônica Automotiva: SUV com os módulos eletrônicos e o chicote destacados em azul sobre a carroceria.',
-    seoTitle: 'Treinamento em Eletrônica Automotiva: ECUs e CAN/LIN | COUTS',
-    seoDescription:
-      'Treinamento em eletrônica automotiva: sensores, ECUs, microcontroladores, atuadores, alimentação, comunicação CAN/LIN e interação entre os módulos do veículo.',
     desc: 'A base eletrônica do veículo e como os módulos conversam entre si.',
     topics: numbered([
       'sensores',
@@ -101,14 +83,8 @@ export const TECHS = [
     code: '04',
     short: 'Arquitetura Eletrônica',
     title: 'Arquitetura Eletrônica do Veículo',
-    slug: 'arquitetura-eletronica-veicular',
     banner: bannerArquitetura,
     bannerSrcSet: bannerSet(bannerArquiteturaSm, bannerArquitetura),
-    bannerAlt:
-      'Arte do treinamento de Arquitetura Eletrônica do Veículo: sedã com as redes CAN, LIN e Ethernet e os módulos destacados, ao lado de um painel de arquitetura zonal.',
-    seoTitle: 'Treinamento em Arquitetura Eletrônica Veicular (E/E) | COUTS',
-    seoDescription:
-      'Treinamento em arquitetura E/E: ECUs, redes CAN, LIN e Ethernet, gateways, domain controllers, arquitetura zonal e software-defined vehicle.',
     desc: 'Da arquitetura distribuída ao software-defined vehicle: como a topologia elétrica e eletrônica está evoluindo.',
     topics: numbered([
       'visão geral da arquitetura E/E',
@@ -126,15 +102,18 @@ export const TECHS = [
   },
 ];
 
-/** URL permanente da página de cada treinamento. */
-export const trainingPath = (tech) => `/treinamentos/${tech.slug}`;
+/**
+ * Âncora da aba de cada treinamento na página inicial. Abrir `/#tab-01`
+ * rola até as abas com o treinamento já selecionado (ver Trainings.jsx).
+ */
+export const trainingHref = (tech) => `/#tab-${tech.code}`;
 
 export const PILLARS = [
   { code: '01', title: 'ADAS', note: 'Sensores, fusão e validação de funções de assistência.' },
   { code: '02', title: 'Diagnóstico', note: 'ECUs, falhas, CAN e método sistemático.' },
   { code: '03', title: 'Eletrônica', note: 'ECUs, sensores, atuadores e comunicação.' },
   { code: '04', title: 'Arquitetura E/E', note: 'Redes, gateways e software-defined vehicle.' },
-].map((pillar, i) => ({ ...pillar, href: trainingPath(TECHS[i]) }));
+].map((pillar, i) => ({ ...pillar, href: `#tab-${TECHS[i].code}` }));
 
 export const MARKET_PARAGRAPHS = [
   'O setor automotivo está passando por uma das maiores transformações de sua história.',

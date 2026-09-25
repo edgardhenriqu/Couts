@@ -1,11 +1,26 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Eyebrow from './Eyebrow.jsx';
-import { BANNER_SIZE, TECHS, trainingPath } from '../data.js';
+import { BANNER_SIZE, TECHS } from '../data.js';
+
+/** Índice da aba indicada por `#tab-01` … `#tab-04`, ou -1. */
+const tabFromHash = (hash) => TECHS.findIndex((tech) => hash === `#tab-${tech.code}`);
 
 export default function Trainings() {
   const [active, setActive] = useState(0);
   const tabRefs = useRef([]);
+
+  // Cartões das tecnologias, rodapé e endereços antigos (/treinamentos/…)
+  // apontam para `#tab-XX`: abre a aba correspondente ao chegar.
+  useEffect(() => {
+    const sync = () => {
+      const index = tabFromHash(window.location.hash);
+      if (index >= 0) setActive(index);
+    };
+    sync();
+    window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, []);
 
   const focusTab = (index) => {
     setActive(index);
@@ -66,8 +81,8 @@ export default function Trainings() {
 
           {/*
             Os quatro painéis ficam no HTML (padrão ARIA de abas, com `hidden`
-            nos inativos): todo o conteúdo programático e os links para as
-            páginas dos treinamentos chegam aos buscadores sem depender de JS.
+            nos inativos): todo o conteúdo programático chega aos buscadores
+            sem depender de JS.
           */}
           {TECHS.map((tech, i) => (
             <div
@@ -104,25 +119,14 @@ export default function Trainings() {
                 />
               </figure>
 
-              <div className="tech-panel__body">
-                <ol className="topics">
-                  {tech.topics.map(({ n, label }) => (
-                    <li key={n}>
-                      <span className="topics__n">{n}</span>
-                      <span className="topics__label">{label}</span>
-                    </li>
-                  ))}
-                </ol>
-
-                <a
-                  className="text-link"
-                  href={trainingPath(tech)}
-                  data-track="service_click"
-                  data-track-label={tech.short}
-                >
-                  Conheça o treinamento de {tech.short} <span aria-hidden="true">→</span>
-                </a>
-              </div>
+              <ol className="topics">
+                {tech.topics.map(({ n, label }) => (
+                  <li key={n}>
+                    <span className="topics__n">{n}</span>
+                    <span className="topics__label">{label}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
           ))}
         </div>

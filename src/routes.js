@@ -5,7 +5,7 @@
  * Usado nos dois lados: `entry-server.jsx` gera o HTML estático de cada rota
  * no build, e `main.jsx` escolhe a página a hidratar pelo `pathname`.
  */
-import { FAQ, TECHS, trainingPath } from './data.js';
+import { FAQ, TECHS } from './data.js';
 import { FELIPE } from './felipe.js';
 import { CONTACT, SITE, SOCIAL_LINKS, absoluteUrl } from './site.js';
 import { HERO_POSTER } from './components/Hero.jsx';
@@ -76,24 +76,17 @@ const person = {
   ],
 };
 
+/** Cada treinamento, descrito na seção #treinamentos da página inicial. */
 const course = (tech) => ({
   '@type': 'Course',
-  '@id': `${absoluteUrl(trainingPath(tech))}#course`,
+  '@id': `${SITE.url}/#curso-${tech.code}`,
   name: tech.title,
   description: tech.desc,
-  url: absoluteUrl(trainingPath(tech)),
+  url: `${SITE.url}/#tab-${tech.code}`,
   image: absoluteUrl(tech.banner),
   inLanguage: SITE.language,
   provider: { '@id': ORG_ID },
   teaches: tech.topics.map((t) => t.label),
-});
-
-const breadcrumb = (tech) => ({
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Início', item: `${SITE.url}/` },
-    { '@type': 'ListItem', position: 2, name: tech.short, item: absoluteUrl(trainingPath(tech)) },
-  ],
 });
 
 const graph = (...nodes) => ({ '@context': 'https://schema.org', '@graph': nodes });
@@ -127,8 +120,7 @@ export const ROUTES = [
         itemListElement: TECHS.map((tech, i) => ({
           '@type': 'ListItem',
           position: i + 1,
-          url: absoluteUrl(trainingPath(tech)),
-          name: tech.title,
+          item: course(tech),
         })),
       },
       // FAQ visível na página inicial (seção #perguntas-frequentes).
@@ -143,33 +135,6 @@ export const ROUTES = [
       },
     ),
   },
-  ...TECHS.map((tech) => ({
-    path: trainingPath(tech),
-    page: 'training',
-    tech,
-    title: tech.seoTitle,
-    description: tech.seoDescription,
-    // JPG 1200 × 675 em public/og/: LinkedIn e WhatsApp não aceitam WebP de forma confiável.
-    ogImage: `/og/treinamento-${tech.slug.split('-')[0]}.jpg`,
-    ogImageAlt: tech.bannerAlt,
-    ogImageSize: { width: 1200, height: 675 },
-    preloadImage: tech.banner,
-    // Mesmo `srcset`/`sizes` do banner da página, para o preload baixar a versão certa.
-    preloadSrcSet: tech.bannerSrcSet,
-    preloadSizes: '(max-width: 1100px) calc(100vw - 64px), 620px',
-    changefreq: 'monthly',
-    priority: '0.8',
-    jsonLd: graph(organization, course(tech), breadcrumb(tech), {
-      '@type': 'WebPage',
-      '@id': `${absoluteUrl(trainingPath(tech))}#webpage`,
-      url: absoluteUrl(trainingPath(tech)),
-      name: tech.seoTitle,
-      description: tech.seoDescription,
-      inLanguage: SITE.language,
-      isPartOf: { '@id': WEBSITE_ID },
-      mainEntity: { '@id': `${absoluteUrl(trainingPath(tech))}#course` },
-    }),
-  })),
 ];
 
 export const NOT_FOUND = {
@@ -208,7 +173,7 @@ export function renderHead(route) {
     canonical && `<link rel="canonical" href="${canonical}" />`,
     canonical && `<link rel="alternate" hreflang="pt-BR" href="${canonical}" />`,
     route.preloadImage &&
-      `<link rel="preload" as="image" href="${route.preloadImage}"${route.preloadSrcSet ? ` imagesrcset="${route.preloadSrcSet}" imagesizes="${route.preloadSizes}"` : ''} fetchpriority="high" />`,
+      `<link rel="preload" as="image" href="${route.preloadImage}" fetchpriority="high" />`,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="${SITE.name}" />`,
     `<meta property="og:locale" content="${SITE.locale}" />`,

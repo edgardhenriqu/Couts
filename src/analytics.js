@@ -6,7 +6,7 @@
  * `window.dataLayer`, o que também serve a um contêiner GTM instalado depois.
  *
  * Eventos: cta_click, contact_click, whatsapp_click, email_click,
- * linkedin_click, service_view, form_submit, form_error.
+ * linkedin_click, service_click, form_submit, form_error.
  */
 
 const MEASUREMENT_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || '';

@@ -3,7 +3,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 
 import App from './App.jsx';
 import { matchRoute } from './routes.js';
-import { initAnalytics, initClickTracking, track } from './analytics.js';
+import { initAnalytics, initClickTracking } from './analytics.js';
 import './styles.css';
 
 const route = matchRoute(window.location.pathname);
@@ -25,4 +25,3 @@ if (container.firstElementChild) {
 
 initAnalytics();
 initClickTracking();
-if (route.page === 'training') track('service_view', { training: route.tech.short });

@@ -1,5 +1,5 @@
 import Eyebrow from '../components/Eyebrow.jsx';
-import { TECHS, trainingPath } from '../data.js';
+import { TECHS, trainingHref } from '../data.js';
 
 export default function NotFoundPage() {
   return (
@@ -15,8 +15,8 @@ export default function NotFoundPage() {
         </p>
         <ul className="not-found__links">
           {TECHS.map((tech) => (
-            <li key={tech.slug}>
-              <a className="text-link" href={trainingPath(tech)}>
+            <li key={tech.code}>
+              <a className="text-link" href={trainingHref(tech)}>
                 {tech.title} <span aria-hidden="true">→</span>
               </a>
             </li>
