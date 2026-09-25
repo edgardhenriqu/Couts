@@ -19,11 +19,12 @@ export default function HomePage() {
       <QuoteBand />
       <Trainings />
       <Audiences />
-      <LearnConnectBuild />
       <WhyUs />
       <Teachers />
       <Faq />
       <Contact />
+      {/* Fechamento da página: Learn. Connect. Build. logo antes do rodapé. */}
+      <LearnConnectBuild />
     </>
   );
 }
