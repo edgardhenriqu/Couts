@@ -1045,6 +1045,42 @@ textarea.field__input { resize: vertical; min-height: 96px; line-height: 1.6; }
 .field__input[aria-invalid='true'] { border-color: #FF7A6B; }
 .field__error { font-size: 13px; color: #FF9C90; }
 .form__hint--error { color: #FF9C90; }
+/* Painel de sucesso: entra no lugar do formulário depois do envio. */
+.form--success {
+  align-items: flex-start;
+  gap: 16px;
+  border-color: var(--accent-line);
+  background: linear-gradient(160deg, rgba(79, 180, 255, .12), var(--bg-alt) 60%);
+  outline: none;
+  animation: form-success-in .35s ease both;
+}
+.form--success:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.form__success-icon {
+  width: 52px;
+  height: 52px;
+  color: var(--accent);
+  filter: drop-shadow(0 0 12px rgba(79, 180, 255, .45));
+}
+.form__success-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+.form__success-text {
+  max-width: 44ch;
+  font-size: 15.5px;
+  line-height: 1.7;
+  font-weight: 300;
+  color: var(--muted);
+}
+.form__success-again { margin-top: 8px; cursor: pointer; background: none; font-family: var(--font-body); }
+@keyframes form-success-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
 .form__trap {
   position: absolute;
   left: -10000px;

@@ -50,11 +50,27 @@ export default function Contact({
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | sending | sent | handoff | error | unavailable
   const startedAt = useRef(0);
+  const successRef = useRef(null);
   const id = useId();
 
   useEffect(() => {
     startedAt.current = Date.now();
   }, []);
+
+  // Envio concluído: o painel de sucesso entra no lugar do formulário, a tela
+  // rola até ele e o foco vai para ele (leitores de tela anunciam o título).
+  useEffect(() => {
+    if (status !== 'sent' || !successRef.current) return;
+    successRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    successRef.current.focus({ preventScroll: true });
+  }, [status]);
+
+  const reset = () => {
+    setValues({ ...EMPTY, interesse: defaultInterest });
+    setErrors({});
+    setStatus('idle');
+    startedAt.current = Date.now();
+  };
 
   const onChange = (event) => {
     const { name, value } = event.target;
@@ -196,76 +212,102 @@ export default function Contact({
           )}
         </div>
 
-        <form className="form" onSubmit={onSubmit} noValidate>
-          <div className="field">
-            <label className="field__label" htmlFor={`${id}-nome`}>
-              Nome
-            </label>
-            <input {...fieldProps('nome')} type="text" autoComplete="name" required />
-            {fieldError('nome')}
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor={`${id}-empresa`}>
-              Empresa <span className="field__optional">(opcional)</span>
-            </label>
-            <input {...fieldProps('empresa')} type="text" autoComplete="organization" />
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor={`${id}-email`}>
-              E-mail
-            </label>
-            <input {...fieldProps('email')} type="email" autoComplete="email" inputMode="email" required />
-            {fieldError('email')}
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor={`${id}-telefone`}>
-              Telefone / WhatsApp <span className="field__optional">(opcional)</span>
-            </label>
-            <input {...fieldProps('telefone')} type="tel" autoComplete="tel" inputMode="tel" />
-            {fieldError('telefone')}
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor={`${id}-interesse`}>
-              Qual treinamento você tem interesse?
-            </label>
-            <select {...fieldProps('interesse')}>
-              {TRAINING_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor={`${id}-mensagem`}>
-              Como podemos ajudar? <span className="field__optional">(opcional)</span>
-            </label>
-            <textarea {...fieldProps('mensagem')} rows={3} maxLength={1500} />
-          </div>
-
-          {/* Campo-isca: invisível para pessoas, preenchido por robôs. */}
-          <div className="form__trap" aria-hidden="true">
-            <label htmlFor={`${id}-website`}>Não preencha este campo</label>
-            <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
-          </div>
-
-          <button className="form__submit" type="submit" disabled={status === 'sending' || status === 'sent'}>
-            {status === 'sent' ? 'Mensagem enviada' : status === 'sending' ? 'Enviando…' : 'Solicitar contato'}
-          </button>
-
-          <p
-            className={status === 'error' || status === 'unavailable' ? 'form__hint form__hint--error' : 'form__hint'}
+        {status === 'sent' ? (
+          <div
+            className="form form--success"
+            ref={successRef}
+            tabIndex={-1}
             role="status"
             aria-live="polite"
+            aria-labelledby={`${id}-success-title`}
           >
-            {messages[status]}
-          </p>
-        </form>
+            <svg className="form__success-icon" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="23" fill="none" stroke="currentColor" strokeWidth="2" />
+              <path d="m14.5 24.5 6.5 6.5 13-14" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <h3 className="form__success-title" id={`${id}-success-title`}>
+              Mensagem enviada com sucesso!
+            </h3>
+            <p className="form__success-text">
+              Obrigado pelo contato. Recebemos seus dados e a equipe da COUTS vai responder no
+              e-mail informado em breve.
+            </p>
+            <button className="btn btn--ghost form__success-again" type="button" onClick={reset}>
+              Enviar outra mensagem
+            </button>
+          </div>
+        ) : (
+          <form className="form" onSubmit={onSubmit} noValidate>
+            <div className="field">
+              <label className="field__label" htmlFor={`${id}-nome`}>
+                Nome
+              </label>
+              <input {...fieldProps('nome')} type="text" autoComplete="name" required />
+              {fieldError('nome')}
+            </div>
+
+            <div className="field">
+              <label className="field__label" htmlFor={`${id}-empresa`}>
+                Empresa <span className="field__optional">(opcional)</span>
+              </label>
+              <input {...fieldProps('empresa')} type="text" autoComplete="organization" />
+            </div>
+
+            <div className="field">
+              <label className="field__label" htmlFor={`${id}-email`}>
+                E-mail
+              </label>
+              <input {...fieldProps('email')} type="email" autoComplete="email" inputMode="email" required />
+              {fieldError('email')}
+            </div>
+
+            <div className="field">
+              <label className="field__label" htmlFor={`${id}-telefone`}>
+                Telefone / WhatsApp <span className="field__optional">(opcional)</span>
+              </label>
+              <input {...fieldProps('telefone')} type="tel" autoComplete="tel" inputMode="tel" />
+              {fieldError('telefone')}
+            </div>
+
+            <div className="field">
+              <label className="field__label" htmlFor={`${id}-interesse`}>
+                Qual treinamento você tem interesse?
+              </label>
+              <select {...fieldProps('interesse')}>
+                {TRAINING_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="field">
+              <label className="field__label" htmlFor={`${id}-mensagem`}>
+                Como podemos ajudar? <span className="field__optional">(opcional)</span>
+              </label>
+              <textarea {...fieldProps('mensagem')} rows={3} maxLength={1500} />
+            </div>
+
+            {/* Campo-isca: invisível para pessoas, preenchido por robôs. */}
+            <div className="form__trap" aria-hidden="true">
+              <label htmlFor={`${id}-website`}>Não preencha este campo</label>
+              <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+
+            <button className="form__submit" type="submit" disabled={status === 'sending'}>
+              {status === 'sending' ? 'Enviando…' : 'Solicitar contato'}
+            </button>
+
+            <p
+              className={status === 'error' || status === 'unavailable' ? 'form__hint form__hint--error' : 'form__hint'}
+              role="status"
+              aria-live="polite"
+            >
+              {messages[status]}
+            </p>
+          </form>
+        )}
       </div>
     </section>
   );
