@@ -81,7 +81,16 @@ export default function Contact({
       return;
     }
 
-    const payload = { ...values, pagina: window.location.href };
+    const payload = {
+      ...values,
+      pagina: window.location.href,
+      // Campos de controle do FormSubmit (outros serviços os tratam como
+      // campos comuns): assunto do e-mail, layout em tabela e resposta
+      // direta para quem preencheu.
+      _subject: `Contato pelo site COUTS — ${values.interesse}`,
+      _template: 'table',
+      _replyto: values.email,
+    };
 
     if (CONTACT.formEndpoint) {
       setStatus('sending');
@@ -92,6 +101,10 @@ export default function Contact({
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        // O FormSubmit responde 200 com { success: "false" } quando o
+        // formulário ainda não foi ativado ou o envio foi recusado.
+        const data = await res.json().catch(() => ({}));
+        if (String(data.success) === 'false') throw new Error(data.message || 'Envio recusado');
         setStatus('sent');
         setValues({ ...EMPTY, interesse: defaultInterest });
         track('form_submit', { interest: values.interesse, method: 'endpoint' });

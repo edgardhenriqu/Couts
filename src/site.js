@@ -35,10 +35,13 @@ export const CONTACT = {
   whatsappMessage:
     'Olá! Conheci a COUTS pelo site e gostaria de saber mais sobre os treinamentos.',
   /**
-   * Endpoint que recebe o formulário via POST (JSON). Serve qualquer serviço
-   * de formulários (Formspree, Getform, Basin…) ou uma API própria.
+   * Endpoint que recebe o formulário via POST (JSON). Padrão: FormSubmit,
+   * que encaminha cada envio para coutstech@gmail.com sem conta nem chave.
+   * Na primeira vez o FormSubmit manda um e-mail de ativação para esse
+   * endereço; até alguém clicar em "Activate Form", os envios não chegam.
+   * `VITE_CONTACT_ENDPOINT` troca por outro serviço ou API própria.
    */
-  formEndpoint: env.VITE_CONTACT_ENDPOINT || '',
+  formEndpoint: env.VITE_CONTACT_ENDPOINT || 'https://formsubmit.co/ajax/coutstech@gmail.com',
 };
 
 /** Perfis oficiais. Links vazios não são exibidos. */

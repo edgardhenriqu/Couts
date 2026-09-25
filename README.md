@@ -33,8 +33,8 @@ só hidrata o HTML pronto.
   as antigas páginas de treinamento, aplica cache longo em `/assets/` e
   cabeçalhos de segurança.
 - **Contato, redes e analytics:** `src/site.js` e `src/analytics.js`, ligados
-  por variáveis de ambiente — veja `.env.example`. Nenhum canal está
-  configurado ainda: sem eles o formulário avisa que o envio está indisponível.
+  por variáveis de ambiente — veja `.env.example`. O formulário envia para
+  coutstech@gmail.com via FormSubmit (`CONTACT.formEndpoint`).
 - **Imagens:** WebP com `srcset` (originais em PNG ficam no histórico do Git).
   Ícones e imagens de compartilhamento ficam em `public/`.
 
@@ -177,9 +177,11 @@ precisar existir no site, os dados já estão prontos em `TECHS`.
 
 ## Pendências conhecidas
 
-- **Canais de contato não configurados.** O formulário envia de verdade
-  (endpoint → e-mail → WhatsApp), mas nenhum canal existe no projeto. Configure
-  ao menos `VITE_CONTACT_ENDPOINT` ou `VITE_CONTACT_EMAIL` antes de publicar.
+- **Formulário via FormSubmit.** Os envios vão para coutstech@gmail.com. O
+  FormSubmit exige uma ativação única (link no e-mail "Action Required"); sem
+  ela, os envios não chegam. Para esconder o e-mail no código, troque o
+  endereço no endpoint pelo código aleatório que o FormSubmit envia após a
+  ativação.
 - **Redes sociais** só aparecem com URL configurada (`.env.example`).
 - **Vídeo do hero:** `hero-carro-720.mp4` (1,8 MB) e `hero-carro-360.mp4`
   (0,6 MB, servido abaixo de 760 px), ambos sem áudio e com `faststart`.
