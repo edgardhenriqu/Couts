@@ -201,7 +201,7 @@ export const REASONS = [
  */
 export const NAV_LINKS = [
   { href: '/#treinamentos', label: 'Treinamentos' },
-  { href: '/#por-que-aprender-conosco', label: 'Tecnologias' },
+  { href: '/#tecnologias', label: 'Tecnologias' },
   { href: '/#professores', label: 'Instrutores' },
 ];
 

@@ -2,7 +2,7 @@ import { PILLARS } from '../data.js';
 
 export default function Pillars() {
   return (
-    <section className="pillars" aria-labelledby="pillars-title">
+    <section className="pillars" id="tecnologias" aria-labelledby="pillars-title">
       <h2 className="sr-only" id="pillars-title">
         Áreas de treinamento
       </h2>
