@@ -2,12 +2,15 @@ import SiteHeader from './components/SiteHeader.jsx';
 import SiteFooter from './components/SiteFooter.jsx';
 import HomePage from './pages/HomePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import useScrollReveal from './hooks/useScrollReveal.js';
 
 /**
  * Casca comum às páginas (inicial e 404). Cada rota é um HTML estático
  * próprio, gerado por `scripts/prerender.mjs`.
  */
 export default function App({ route }) {
+  useScrollReveal();
+
   // Na 404 não há formulário: o "Fale com a equipe" leva ao da página inicial.
   const contactHref = route.page === 'not-found' ? '/#contato' : '#contato';
 

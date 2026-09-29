@@ -1270,3 +1270,68 @@ textarea.field__input { resize: vertical; min-height: 96px; line-height: 1.6; }
   }
   .site-nav { transition: none; }
 }
+
+/* ========================================================= scroll reveal */
+/* Elementos marcados com <Reveal> (data-reveal) aparecem ao entrar na tela;
+   quem dispara é src/hooks/useScrollReveal.js. Só `opacity`, `translate` e
+   `scale` animam — sem layout shift, e sem mexer no `transform` que o próprio
+   elemento use em hover. O estado oculto depende da classe `reveal-on`, posta
+   no <html> pelo script do index.html: sem JS ou com movimento reduzido,
+   nada fica escondido. */
+:root {
+  --reveal-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+[data-reveal] {
+  --reveal-x: 0px;
+  --reveal-y: 0px;
+}
+[data-reveal='up']    { --reveal-y: var(--reveal-distance, 30px); }
+[data-reveal='down']  { --reveal-y: calc(var(--reveal-distance, 30px) * -1); }
+[data-reveal='left']  { --reveal-x: calc(var(--reveal-distance, 30px) * -1); }
+[data-reveal='right'] { --reveal-x: var(--reveal-distance, 30px); }
+
+html.reveal-on [data-reveal]:not([data-revealed]) {
+  opacity: 0;
+  translate: var(--reveal-x) var(--reveal-y);
+  scale: var(--reveal-scale, 1);
+}
+
+/* A transição de entrada vale só durante a entrada ('in'); depois ('done') o
+   elemento volta às próprias transições (hover de botões e cards). */
+html.reveal-on [data-reveal][data-revealed='in'] {
+  transition:
+    opacity   var(--reveal-duration, .7s) var(--reveal-ease) var(--reveal-delay, 0s),
+    translate var(--reveal-duration, .7s) var(--reveal-ease) var(--reveal-delay, 0s),
+    scale     var(--reveal-duration, .7s) var(--reveal-ease) var(--reveal-delay, 0s);
+}
+
+/* Celular: nada de deslocamento lateral (evita barra horizontal e cortes). */
+@media (max-width: 760px) {
+  [data-reveal='left'],
+  [data-reveal='right'] {
+    --reveal-x: 0px;
+    --reveal-y: min(var(--reveal-distance, 30px), 24px);
+  }
+  [data-reveal='up'] { --reveal-y: min(var(--reveal-distance, 30px), 24px); }
+}
+
+@media print {
+  html.reveal-on [data-reveal] { opacity: 1 !important; translate: none !important; scale: none !important; }
+}
+
+/* Primeira dobra: o hero já está na tela ao abrir, então entra por CSS puro,
+   sem depender do JS nem atrasar a pintura do pôster (LCP). */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__inner > * {
+    animation: hero-in .8s var(--reveal-ease) both;
+  }
+  .hero__inner > :nth-child(2) { animation-delay: .08s; }
+  .hero__inner > :nth-child(3) { animation-delay: .2s; }
+  .hero__inner > :nth-child(4) { animation-delay: .3s; }
+  .hero__inner > :nth-child(5) { animation-delay: .42s; }
+}
+
+@keyframes hero-in {
+  from { opacity: 0; translate: 0 30px; }
+}

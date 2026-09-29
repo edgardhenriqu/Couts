@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 
 import Eyebrow from './Eyebrow.jsx';
+import Reveal from './Reveal.jsx';
 import { TRAINING_OPTIONS } from '../data.js';
 import { CONTACT, whatsappHref } from '../site.js';
 import { track } from '../analytics.js';
@@ -185,32 +186,34 @@ export default function Contact({
   return (
     <section className="section" id="contato" aria-labelledby={`${id}-title`}>
       <div className="wrap wrap--narrow contact">
-        <div>
-          <Eyebrow>{eyebrow}</Eyebrow>
-          <h2 className="h2 h2--tight" id={`${id}-title`}>
-            {title}
-          </h2>
-          <p className="contact__note">
-            Preencha os dados e conte qual tecnologia você quer dominar. Retornamos com as próximas
-            turmas e conteúdos.
-          </p>
-          <p className="contact__note contact__note--b2b">
-            Para capacitar uma equipe, informe a empresa e escolha “Capacitação para empresa ou
-            equipe”.
-          </p>
-          {wa && (
-            <a
-              className="btn btn--ghost contact__whatsapp"
-              href={wa}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-track="whatsapp_click"
-              aria-label="Conversar com a COUTS pelo WhatsApp (abre em nova aba)"
-            >
-              Conversar pelo WhatsApp
-            </a>
-          )}
-        </div>
+        <Reveal direction="left">
+          <div>
+            <Eyebrow>{eyebrow}</Eyebrow>
+            <h2 className="h2 h2--tight" id={`${id}-title`}>
+              {title}
+            </h2>
+            <p className="contact__note">
+              Preencha os dados e conte qual tecnologia você quer dominar. Retornamos com as próximas
+              turmas e conteúdos.
+            </p>
+            <p className="contact__note contact__note--b2b">
+              Para capacitar uma equipe, informe a empresa e escolha “Capacitação para empresa ou
+              equipe”.
+            </p>
+            {wa && (
+              <a
+                className="btn btn--ghost contact__whatsapp"
+                href={wa}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-track="whatsapp_click"
+                aria-label="Conversar com a COUTS pelo WhatsApp (abre em nova aba)"
+              >
+                Conversar pelo WhatsApp
+              </a>
+            )}
+          </div>
+        </Reveal>
 
         {status === 'sent' ? (
           <div
@@ -237,76 +240,78 @@ export default function Contact({
             </button>
           </div>
         ) : (
-          <form className="form" onSubmit={onSubmit} noValidate>
-            <div className="field">
-              <label className="field__label" htmlFor={`${id}-nome`}>
-                Nome
-              </label>
-              <input {...fieldProps('nome')} type="text" autoComplete="name" required />
-              {fieldError('nome')}
-            </div>
+          <Reveal direction="right" delay={0.15}>
+            <form className="form" onSubmit={onSubmit} noValidate>
+              <div className="field">
+                <label className="field__label" htmlFor={`${id}-nome`}>
+                  Nome
+                </label>
+                <input {...fieldProps('nome')} type="text" autoComplete="name" required />
+                {fieldError('nome')}
+              </div>
 
-            <div className="field">
-              <label className="field__label" htmlFor={`${id}-empresa`}>
-                Empresa <span className="field__optional">(opcional)</span>
-              </label>
-              <input {...fieldProps('empresa')} type="text" autoComplete="organization" />
-            </div>
+              <div className="field">
+                <label className="field__label" htmlFor={`${id}-empresa`}>
+                  Empresa <span className="field__optional">(opcional)</span>
+                </label>
+                <input {...fieldProps('empresa')} type="text" autoComplete="organization" />
+              </div>
 
-            <div className="field">
-              <label className="field__label" htmlFor={`${id}-email`}>
-                E-mail
-              </label>
-              <input {...fieldProps('email')} type="email" autoComplete="email" inputMode="email" required />
-              {fieldError('email')}
-            </div>
+              <div className="field">
+                <label className="field__label" htmlFor={`${id}-email`}>
+                  E-mail
+                </label>
+                <input {...fieldProps('email')} type="email" autoComplete="email" inputMode="email" required />
+                {fieldError('email')}
+              </div>
 
-            <div className="field">
-              <label className="field__label" htmlFor={`${id}-telefone`}>
-                Telefone / WhatsApp <span className="field__optional">(opcional)</span>
-              </label>
-              <input {...fieldProps('telefone')} type="tel" autoComplete="tel" inputMode="tel" />
-              {fieldError('telefone')}
-            </div>
+              <div className="field">
+                <label className="field__label" htmlFor={`${id}-telefone`}>
+                  Telefone / WhatsApp <span className="field__optional">(opcional)</span>
+                </label>
+                <input {...fieldProps('telefone')} type="tel" autoComplete="tel" inputMode="tel" />
+                {fieldError('telefone')}
+              </div>
 
-            <div className="field">
-              <label className="field__label" htmlFor={`${id}-interesse`}>
-                Qual treinamento você tem interesse?
-              </label>
-              <select {...fieldProps('interesse')}>
-                {TRAINING_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <div className="field">
+                <label className="field__label" htmlFor={`${id}-interesse`}>
+                  Qual treinamento você tem interesse?
+                </label>
+                <select {...fieldProps('interesse')}>
+                  {TRAINING_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <div className="field">
-              <label className="field__label" htmlFor={`${id}-mensagem`}>
-                Como podemos ajudar? <span className="field__optional">(opcional)</span>
-              </label>
-              <textarea {...fieldProps('mensagem')} rows={3} maxLength={1500} />
-            </div>
+              <div className="field">
+                <label className="field__label" htmlFor={`${id}-mensagem`}>
+                  Como podemos ajudar? <span className="field__optional">(opcional)</span>
+                </label>
+                <textarea {...fieldProps('mensagem')} rows={3} maxLength={1500} />
+              </div>
 
-            {/* Campo-isca: invisível para pessoas, preenchido por robôs. */}
-            <div className="form__trap" aria-hidden="true">
-              <label htmlFor={`${id}-website`}>Não preencha este campo</label>
-              <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
-            </div>
+              {/* Campo-isca: invisível para pessoas, preenchido por robôs. */}
+              <div className="form__trap" aria-hidden="true">
+                <label htmlFor={`${id}-website`}>Não preencha este campo</label>
+                <input id={`${id}-website`} name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </div>
 
-            <button className="form__submit" type="submit" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Enviando…' : 'Solicitar contato'}
-            </button>
+              <button className="form__submit" type="submit" disabled={status === 'sending'}>
+                {status === 'sending' ? 'Enviando…' : 'Solicitar contato'}
+              </button>
 
-            <p
-              className={status === 'error' || status === 'unavailable' ? 'form__hint form__hint--error' : 'form__hint'}
-              role="status"
-              aria-live="polite"
-            >
-              {messages[status]}
-            </p>
-          </form>
+              <p
+                className={status === 'error' || status === 'unavailable' ? 'form__hint form__hint--error' : 'form__hint'}
+                role="status"
+                aria-live="polite"
+              >
+                {messages[status]}
+              </p>
+            </form>
+          </Reveal>
         )}
       </div>
     </section>

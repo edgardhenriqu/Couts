@@ -3,6 +3,19 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>
+  /* Scroll reveal (ver src/hooks/useScrollReveal.js): liga o estado oculto antes
+     da primeira pintura, só se houver IntersectionObserver e o usuário não pedir
+     movimento reduzido. Se o bundle não assumir em 3 s, tudo volta a aparecer. */
+  (function (d) {
+    try {
+      if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var r = d.documentElement;
+      r.classList.add('reveal-on');
+      setTimeout(function () { if (!window.__coutsReveal) r.classList.remove('reveal-on'); }, 3000);
+    } catch (e) {}
+  })(document);
+</script>
 <!--app-head-->
 <meta name="theme-color" content="#05070A" />
 <meta name="author" content="COUTS" />

@@ -1,3 +1,4 @@
+import Reveal, { stagger } from './Reveal.jsx';
 import { LCB } from '../data.js';
 
 export default function LearnConnectBuild() {
@@ -7,15 +8,19 @@ export default function LearnConnectBuild() {
 
       <div className="wrap">
         <div className="lcb">
-          {LCB.map(({ word, desc }) => (
-            <article className="lcb__cell" key={word}>
-              <p className="lcb__word">{word}</p>
-              <p className="lcb__desc">{desc}</p>
-            </article>
+          {LCB.map(({ word, desc }, i) => (
+            <Reveal key={word} delay={stagger(i)}>
+              <article className="lcb__cell">
+                <p className="lcb__word">{word}</p>
+                <p className="lcb__desc">{desc}</p>
+              </article>
+            </Reveal>
           ))}
         </div>
 
-        <p className="lcb__flow">Treinamento → Networking → Engenharia</p>
+        <Reveal delay={stagger(LCB.length)}>
+          <p className="lcb__flow">Treinamento → Networking → Engenharia</p>
+        </Reveal>
       </div>
     </section>
   );
