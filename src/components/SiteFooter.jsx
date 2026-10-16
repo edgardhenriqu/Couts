@@ -65,6 +65,7 @@ export default function SiteFooter({ contactHref = '#contato' }) {
       <div className="wrap site-footer__bottom">
         <span>© {__BUILD_YEAR__} COUTS. Todos os direitos reservados.</span>
         <span className="site-footer__mono">{SITE.slogan}</span>
+        <a href="/privacidade">Política de Privacidade</a>
       </div>
     </footer>
   );

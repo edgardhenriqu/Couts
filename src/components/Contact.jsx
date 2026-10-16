@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 
 import Eyebrow from './Eyebrow.jsx';
 import Reveal from './Reveal.jsx';
-import { TRAINING_OPTIONS } from '../data.js';
+import { TECHS, TRAINING_OPTIONS } from '../data.js';
 import { CONTACT, whatsappHref } from '../site.js';
 import { track } from '../analytics.js';
 
@@ -53,6 +53,19 @@ export default function Contact({
   const startedAt = useRef(0);
   const successRef = useRef(null);
   const id = useId();
+
+  useEffect(() => {
+    const selectCourse = () => {
+      const tech = TECHS.find((item) => window.location.hash === `#contato-${item.code}`);
+      if (!tech) return;
+      setValues((prev) => ({ ...prev, interesse: tech.short }));
+      setStatus('idle');
+      document.getElementById('contato')?.scrollIntoView({ block: 'start' });
+    };
+    selectCourse();
+    window.addEventListener('hashchange', selectCourse);
+    return () => window.removeEventListener('hashchange', selectCourse);
+  }, []);
 
   useEffect(() => {
     startedAt.current = Date.now();
@@ -125,7 +138,18 @@ export default function Contact({
         setStatus('sent');
         setValues({ ...EMPTY, interesse: defaultInterest });
         track('form_submit', { interest: values.interesse, method: 'endpoint' });
-      } catch {
+        // Aguarda a tentativa de registro da conversão, com limite mesmo se
+        // o analytics estiver bloqueado. Nenhum dado pessoal vai na URL.
+        let navigating = false;
+        const navigate = () => {
+          if (navigating) return;
+          navigating = true;
+          window.location.assign('/obrigado');
+        };
+        setTimeout(navigate, 1200);
+        track('generate_lead', { interest: values.interesse, method: 'endpoint' }, navigate);
+      } catch (error) {
+        if (import.meta.env.DEV) console.error('[Contato] Falha no envio:', error.message);
         setStatus('error');
         track('form_error', { field: 'network' });
       }
@@ -310,6 +334,7 @@ export default function Contact({
               >
                 {messages[status]}
               </p>
+              <p className="form__hint">Ao solicitar contato, seus dados serão usados para atender sua solicitação. Consulte a <a href="/privacidade">Política de Privacidade</a>.</p>
             </form>
           </Reveal>
         )}

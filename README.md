@@ -190,3 +190,14 @@ precisar existir no site, os dados já estão prontos em `TECHS`.
   o download do vídeo fica adiado indefinidamente (`readyState` 0). Por isso
   `useBackgroundVideo.js` força `defaultMuted`/`muted` antes do `play()`. Não
   remova essas duas linhas.
+
+## Contato por curso, privacidade e GA4
+
+- Cada curso aponta para `#contato-01` a `#contato-04`, selecionando o interesse sem apagar os outros campos.
+- `/privacidade` é pré-renderizada e aparece no rodapé e no formulário.
+- Configure `VITE_GA_MEASUREMENT_ID=G-...` no ambiente e gere um novo build. Nenhum ID fictício é usado.
+- O GA4 só carrega com ID válido e aceite das métricas. A preferência pode ser alterada na política de privacidade.
+- Eventos: `course_contact_click`, `cta_click`, `contact_click`, `form_error`, `form_submit` e `generate_lead` (este último somente após confirmação do endpoint).
+- Na propriedade GA4, marque `generate_lead` como evento principal. Desative a medição otimizada de interações com formulários para evitar contar envios tentados como conversões; revise também eventos automáticos e coleta de dados nas configurações da propriedade.
+- Validação em produção: aceite as métricas, clique em um curso e confirme o interesse selecionado; faça um envio autorizado e confira `course_contact_click` e `generate_lead` no Tempo real/DebugView. Confira também a recusa em uma sessão limpa: sem requisição ao gtag e sem novos cookies GA.
+- A confirmação do recebimento no GA4 depende de acesso à propriedade e do ID real. O build e os testes locais não comprovam recebimento remoto.

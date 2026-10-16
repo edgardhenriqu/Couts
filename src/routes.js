@@ -93,6 +93,21 @@ const graph = (...nodes) => ({ '@context': 'https://schema.org', '@graph': nodes
 
 export const ROUTES = [
   {
+    path: '/obrigado',
+    page: 'thank-you',
+    title: 'Mensagem enviada | COUTS',
+    description: 'Obrigado pelo contato. Confira os próximos passos do atendimento da COUTS.',
+    noindex: true,
+  },
+  {
+    path: '/privacidade',
+    page: 'privacy',
+    title: 'Política de Privacidade | COUTS',
+    description: 'Como a COUTS utiliza os dados de contato e as preferências de métricas do site.',
+    changefreq: 'yearly',
+    priority: '0.3',
+  },
+  {
     path: '/',
     page: 'home',
     title: 'COUTS | Treinamentos em Engenharia Automotiva Aplicada',

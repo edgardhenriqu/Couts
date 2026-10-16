@@ -1335,3 +1335,19 @@ html.reveal-on [data-reveal][data-revealed='in'] {
 @keyframes hero-in {
   from { opacity: 0; translate: 0 30px; }
 }
+.tech-panel__action { grid-column: 1 / -1; }
+.thank-you { padding-top: 150px; min-height: 75vh; }
+.thank-you__card { max-width: 850px; margin: auto; padding: clamp(24px, 5vw, 60px); border: 1px solid var(--line-2); background: var(--bg); }
+.thank-you__card .form__success-icon { margin-bottom: 28px; }
+.thank-you__lede { color: var(--text-soft); font-size: 18px; line-height: 1.7; }
+.thank-you__next { margin: 32px 0; padding: 24px 0; border-block: 1px solid var(--line); line-height: 1.8; color: var(--muted); }
+.thank-you__next h2 { color: var(--text-strong); font-size: 21px; margin-bottom: 12px; }
+.thank-you__next p + p { margin-top: 12px; }
+.thank-you__actions { display: flex; flex-wrap: wrap; gap: 16px; }
+.privacy { padding-top: 150px; line-height: 1.8; }
+.privacy h2 { margin: 32px 0 12px; color: var(--text-strong); font-size: 23px; }
+.privacy p { margin-bottom: 18px; }
+.privacy a:not(.btn), .form__hint a, .analytics-consent a { text-decoration: underline; }
+.privacy > .btn { margin-top: 24px; }
+.analytics-consent { position: fixed; bottom: 16px; left: 16px; right: 16px; max-width: 720px; margin: auto; z-index: 100; padding: 24px; background: var(--bg); color: var(--text-strong); border: 1px solid var(--accent); box-shadow: 0 8px 32px #0008; max-height: 80vh; overflow: auto; }
+.analytics-consent__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }

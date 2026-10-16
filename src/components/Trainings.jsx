@@ -135,6 +135,13 @@ export default function Trainings() {
                     </li>
                   ))}
                 </ol>
+                <div className="tech-panel__action">
+                  <a className="btn btn--primary" href={`#contato-${tech.code}`}
+                    data-track="course_contact_click" data-track-label={tech.short}
+                    aria-label={`Solicitar informações sobre ${tech.short}`}>
+                    Quero saber mais sobre este curso →
+                  </a>
+                </div>
               </div>
             ))}
           </div>
