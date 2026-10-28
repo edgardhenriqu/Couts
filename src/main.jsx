@@ -4,6 +4,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 import App from './App.jsx';
 import { matchRoute } from './routes.js';
 import { initAnalytics, initClickTracking } from './analytics.js';
+import { rememberFirstTouch } from './attribution.js';
 import './styles.css';
 
 const route = matchRoute(window.location.pathname);
@@ -25,3 +26,4 @@ if (container.firstElementChild) {
 
 initAnalytics();
 initClickTracking();
+rememberFirstTouch();

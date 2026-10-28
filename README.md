@@ -41,6 +41,74 @@ só hidrata o HTML pronto.
 `base` do Vite agora é `/` (absoluto): com páginas em subpastas, caminhos
 relativos (`./assets`) quebrariam.
 
+## CRM de leads (`/admin/crm`)
+
+Mesmo modelo do CRM da Mundi Data: os contatos do formulário do site viram
+leads em um banco Supabase, e a equipe acompanha tudo em `/admin/crm` —
+indicadores, busca, filtro por responsável, exportação para Excel, detalhe do
+lead com as mensagens recebidas, empresas, agenda de atividades (pendentes,
+realizadas e sequência por lead) e, para o admin, aprovação de acessos e
+equipe. Ficaram de fora o que a interface da Mundi Data já não usava
+(oportunidades, funil, GA4 no painel e fila de e-mails).
+
+O site não tem link para o painel. A equipe entra por `/login`; conhecer a URL
+não dá acesso: a API exige sessão com perfil ativo e o banco aplica RLS.
+
+| Peça | Onde |
+| ---- | ---- |
+| Banco, papéis e regras (RLS) | `supabase/migrations/202610270001_crm.sql` |
+| API (funções da Vercel) | `api/leads.js` (captação pública), `api/crm/[entity].js`, `api/auth/`, `api/access-requests.js` |
+| Validação e clientes Supabase | `server/` |
+| Telas | `admin.html` + `src/admin/` (entrada Vite separada; não pesa na landing) |
+| Rotas | `vercel.json` (rewrites) e `scripts/dev-api.mjs` (o mesmo no `npm run dev`) |
+
+**Formulário.** `Contact.jsx` envia em paralelo para o CRM (`/api/leads`) e
+para o e-mail via FormSubmit, e mostra sucesso se um dos dois confirmar.
+Enquanto o Supabase não estiver configurado, o CRM responde 503 e o e-mail
+segue funcionando como antes. Reenvios usam o mesmo `request_id` e não
+duplicam o lead; o mesmo e-mail vira uma nova mensagem no lead existente.
+
+**Papéis.** `admin` vê e faz tudo (inclusive excluir e aprovar acessos);
+`gestor` vê todos os leads, reatribui e edita empresas; `comercial` vê só a
+própria carteira. Novos leads vão para o comercial ativo com menos leads; sem
+comercial, ficam "Sem responsável". Concluir uma ligação, e-mail ou reunião
+marca o lead como "Contatado".
+
+### Ativar
+
+1. Crie um projeto em [supabase.com](https://supabase.com) (o plano gratuito
+   basta).
+2. **SQL Editor** → cole e rode `supabase/migrations/202610270001_crm.sql`
+   (uma vez só).
+3. **Vercel → Settings → Environment Variables:** `SUPABASE_URL`,
+   `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY` (em Supabase → Project
+   Settings → API Keys) e `APP_URL=https://www.coutstech.com`. Publique de
+   novo. A chave secreta fica só no servidor — nunca com prefixo `VITE_`.
+4. **Supabase → Authentication → URL Configuration:** Site URL
+   `https://www.coutstech.com` e, em Redirect URLs,
+   `https://www.coutstech.com/auth/callback` e
+   `https://www.coutstech.com/auth/callback?next=reset`.
+5. **Primeiro admin:** Authentication → Users → *Add user* (e-mail e senha,
+   marcando *Auto Confirm*). Copie o UUID e rode no SQL Editor:
+
+   ```sql
+   insert into public.profiles (id, name, role)
+   values ('UUID_DO_USUARIO', 'Seu nome', 'admin');
+   ```
+
+6. Abra `https://www.coutstech.com/login`. Outras pessoas usam "Não tenho
+   conta — solicitar acesso" e o admin aprova em **Configurações** (entram
+   como `comercial`; o papel pode ser trocado em "Editar acesso").
+
+Para a recuperação de senha funcionar fora do time do projeto, configure um
+SMTP próprio em Authentication → SMTP Settings (o padrão do Supabase só envia
+para membros do projeto e tem limite baixo).
+
+**Local:** com as mesmas variáveis no `.env`, `npm run dev` já serve `/login`,
+`/admin/crm` e `/api/*`. `npm test` roda a migration num PostgreSQL embutido
+(PGlite) e confere captação, deduplicação, RLS entre comerciais, aprovação de
+acesso e limite de tentativas — sem tocar no Supabase real.
+
 ## Estrutura
 
 ```

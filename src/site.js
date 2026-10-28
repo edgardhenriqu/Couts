@@ -42,6 +42,12 @@ export const CONTACT = {
    * `VITE_CONTACT_ENDPOINT` troca por outro serviço ou API própria.
    */
   formEndpoint: env.VITE_CONTACT_ENDPOINT || 'https://formsubmit.co/ajax/coutstech@gmail.com',
+  /**
+   * Captação do CRM (`api/leads.js` → Supabase), em paralelo ao e-mail acima.
+   * Enquanto o Supabase não estiver configurado ela responde 503 e o envio
+   * segue valendo pelo e-mail.
+   */
+  crmEndpoint: '/api/leads',
 };
 
 /** Perfis oficiais. Links vazios não são exibidos. */

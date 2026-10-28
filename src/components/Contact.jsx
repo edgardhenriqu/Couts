@@ -5,6 +5,7 @@ import Reveal from './Reveal.jsx';
 import { TECHS, TRAINING_OPTIONS } from '../data.js';
 import { CONTACT, whatsappHref } from '../site.js';
 import { track } from '../analytics.js';
+import { attribution } from '../attribution.js';
 
 const EMPTY = { nome: '', empresa: '', email: '', telefone: '', interesse: '', mensagem: '' };
 
@@ -36,7 +37,8 @@ function summary(values) {
 /**
  * Formulário de contato.
  *
- * Envio, na ordem: `CONTACT.formEndpoint` (POST JSON) → e-mail (`mailto:`) →
+ * Envio: CRM (`CONTACT.crmEndpoint`) e e-mail (`CONTACT.formEndpoint`) em
+ * paralelo, valendo se um dos dois confirmar. Sem eles: `mailto:` →
  * WhatsApp. Sem nenhum canal configurado em `src/site.js`, o formulário avisa
  * que o envio está indisponível em vez de simular sucesso.
  *
@@ -52,6 +54,7 @@ export default function Contact({
   const [status, setStatus] = useState('idle'); // idle | sending | sent | handoff | error | unavailable
   const startedAt = useRef(0);
   const successRef = useRef(null);
+  const requestId = useRef(null);
   const id = useId();
 
   useEffect(() => {
@@ -122,9 +125,13 @@ export default function Contact({
       _replyto: values.email,
     };
 
-    if (CONTACT.formEndpoint) {
+    if (CONTACT.formEndpoint || CONTACT.crmEndpoint) {
       setStatus('sending');
-      try {
+      // O mesmo id em novas tentativas evita lead duplicado no CRM.
+      requestId.current ||= crypto.randomUUID();
+
+      const sendEmail = async () => {
+        if (!CONTACT.formEndpoint) throw new Error('Sem endpoint de e-mail');
         const res = await fetch(CONTACT.formEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -135,6 +142,36 @@ export default function Contact({
         // formulário ainda não foi ativado ou o envio foi recusado.
         const data = await res.json().catch(() => ({}));
         if (String(data.success) === 'false') throw new Error(data.message || 'Envio recusado');
+      };
+
+      const sendCrm = async () => {
+        if (!CONTACT.crmEndpoint) throw new Error('Sem CRM');
+        const res = await fetch(CONTACT.crmEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            request_id: requestId.current,
+            name: values.nome,
+            company: values.empresa,
+            email: values.email,
+            phone: values.telefone,
+            interest: values.interesse,
+            message: values.mensagem,
+            ...attribution(),
+          }),
+        });
+        if (!res.ok) throw new Error(`CRM HTTP ${res.status}`);
+      };
+
+      try {
+        // Vale como enviado se ao menos um canal confirmar: o lead no CRM ou
+        // o e-mail para coutstech@gmail.com.
+        const results = await Promise.allSettled([sendCrm(), sendEmail()]);
+        if (import.meta.env.DEV) {
+          results.forEach((r) => r.status === 'rejected' && console.warn('[Contato]', r.reason.message));
+        }
+        if (results.every((r) => r.status === 'rejected')) throw results[1].reason;
+        requestId.current = null;
         setStatus('sent');
         setValues({ ...EMPTY, interesse: defaultInterest });
         track('form_submit', { interest: values.interesse, method: 'endpoint' });

@@ -36,6 +36,24 @@
       "permanent": true
     }
   ],
+  "rewrites": [
+    {
+      "source": "/login",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin/crm",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/auth/callback",
+      "destination": "/api/auth/callback"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
@@ -43,6 +61,32 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/(login|admin|admin/crm|admin.html)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     },
