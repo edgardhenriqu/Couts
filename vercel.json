@@ -39,15 +39,11 @@
   "rewrites": [
     {
       "source": "/login",
-      "destination": "/admin.html"
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin.html"
+      "destination": "/admin"
     },
     {
       "source": "/admin/crm",
-      "destination": "/admin.html"
+      "destination": "/admin"
     },
     {
       "source": "/auth/callback",
